@@ -56,6 +56,7 @@ This section is divided into three sub-sections:
     - [Rate Groups and Timeliness](./best/rate-group.md)
     - [A Quick Look at the Hub Pattern](./best/hub-pattern.md)
     - [Documenting F´ Projects](./best/documentation.md)
+    - [Code and Style Guidelines](./dev/code-style.md)
 - F´ Ground Data System Tools (GDS)
     - [A Brief Guide to the F´ Ground Data System](./gds/gds-introduction.md)
     - [The Discerning User's Guide to the F´ GDS CLI](./gds/gds-cli.md)
@@ -63,6 +64,7 @@ This section is divided into three sub-sections:
     - [Sequencing in F´](./gds/seqgen.md)
 - Full Development Guides: technical details for full F´ implementations
     - [Configuring F´](./dev/configuring-fprime.md)
+    - [v3 Migration Guide](./user/v3-migration-guide.md)
     - [A Tour of the Source Tree](./dev/source-tree.md)
     - [F´ XML Specifications](./dev/xml-specification.md):
     - [F´ Implementation Classes](./dev/implementation.md)
@@ -80,8 +82,6 @@ This section is divided into three sub-sections:
 - API Documentation
     - [GDS CLI Design](./dev/gds-cli-dev.md)
     - [C++ Documentation](./api/c++/html/index.html)
-    - [`fprime` Python Documentation](./api/python/fprime/html/index.html)
-    - [`fprime-gds` Python Documentation](./api/python/fprime-gds/html/index.html)
 
 
 
