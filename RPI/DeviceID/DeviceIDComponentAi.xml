@@ -1,0 +1,16 @@
+<component name = "DeviceID" kind ="passive" namespace="Rpi"> 
+    <comment>Component sending unique device information</comment>
+
+    <commands>
+        <command kind="sync" opcode="0" mnemonic="RD_GET_ID">
+            <comment>Reply with unique device ID</comment>
+        </command>
+    </commands>
+
+    <telemetry>
+        <channel id="0" name="RD_ID_ASKED" data_type="U32">
+            <comment>Amount of instances asked for ID</comment> 
+        </channel> 
+    </telemetry> 
+
+</component> 
