@@ -1,0 +1,16 @@
+Topology DepA.DepA:
+  DepA.SimpleProducer.valOut
+  DepA.chanTlm.TlmGet
+  DepA.cmdSeq.seqCancelIn
+  DepA.cmdSeq.seqDone
+  DepA.cmdSeq.seqRunIn
+  DepA.comm.poll
+  DepA.comm.ready
+  DepA.fileDownlink.FileComplete
+  DepA.fileDownlink.SendFile
+  DepA.health.WdogStroke
+  DepA.prmDb.getPrm
+  DepA.prmDb.setPrm
+  DepA.uplink.framedPoll
+  DepA.uplink.schedIn
+
