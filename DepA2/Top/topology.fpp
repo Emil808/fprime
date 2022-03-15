@@ -10,6 +10,7 @@ module DepA2{
         downlink 
         uplink 
         commP
+        hub
     }
 
     topology DepA2{
@@ -28,7 +29,7 @@ module DepA2{
         instance rateGroup2Comp
         instance rateGroup3Comp
         instance rateGroupDriverComp
-        instance SimpleProducer
+        # instance SimpleProducer
         instance comm
         instance downlink
         instance fatalAdapter
@@ -125,12 +126,14 @@ module DepA2{
 
         }
 
-        connections hub{
+        connections HubUplink{
             commP.allocate -> staticMemory.bufferAllocate[Ports_StaticMemory.commP]
             commP.$recv -> uplinkP.framedIn
             uplinkP.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.commP]
 
+            uplinkP.bufferAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.hub]
             uplinkP.bufferOut -> hub.dataIn
+            uplinkP.bufferDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub]
             
             hub.portOut[0] -> SimpleReceiver.valIn
         }

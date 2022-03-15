@@ -226,6 +226,7 @@ module DepA {
         Os::TaskString name("ReceiveTask");
         // Uplink is configured for receive so a socket task is started
         comm.configure(state.hostName, state.portNumber);
+        (void) printf("FHELLO\n");
         comm.startSocketTask(
             name,
             true,
@@ -368,12 +369,12 @@ module DepA {
 
     phase Fpp.ToCpp.Phases.startTasks """
     // Initialize socket server if and only if there is a valid specification
-    const char * hostNameP = "0.0.0.0"; 
-    U32 portNumberP = 8080; 
+    const char * hostNameP = "127.0.0.5"; 
+    U32 portNumberP = 50020; 
     if (hostNameP != nullptr && portNumberP != 0) {
         Os::TaskString name("ReceiveTaskP");
         // Uplink is configured for receive so a socket task is started
-        commP.configure(hostNameP, portNumberP);
+        commP.configure(hostNameP, portNumberP); 
         commP.startSocketTask(
             name,
             true,
@@ -392,13 +393,13 @@ module DepA {
 
     instance downlinkP: Svc.Framer base id 0x5100 {
 
-    phase Fpp.ToCpp.Phases.configObjects """
-    Svc::FprimeFraming framing;
-    """
+        phase Fpp.ToCpp.Phases.configObjects """
+        Svc::FprimeFraming framing;
+        """
 
-    phase Fpp.ToCpp.Phases.configComponents """
-    downlinkP.setup(ConfigObjects::downlinkP::framing);
-    """
+        phase Fpp.ToCpp.Phases.configComponents """
+        downlinkP.setup(ConfigObjects::downlinkP::framing);
+        """
 
     }
 

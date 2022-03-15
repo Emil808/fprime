@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
         }
 
     }
-
+   
     (void) printf("Hit Ctrl-C to quit\n");
 
     state = DepA2::TopologyState(hostname, port_number);

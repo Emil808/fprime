@@ -368,12 +368,13 @@ module DepA2 {
 
     phase Fpp.ToCpp.Phases.startTasks """
     // Initialize socket server if and only if there is a valid specification
-    const char * hostNameP = "0.0.0.0"; 
-    U32 portNumberP = 8080; 
+    const char * hostNameP = "127.0.0.5"; 
+    U32 portNumberP = 50020; 
     if (hostNameP != nullptr && portNumberP != 0) {
         Os::TaskString name("ReceiveTaskP");
         // Uplink is configured for receive so a socket task is started
         commP.configure(hostNameP, portNumberP);
+        commP.startup(); 
         commP.startSocketTask(
             name,
             true,
@@ -384,6 +385,7 @@ module DepA2 {
     """
 
     phase Fpp.ToCpp.Phases.freeThreads """
+    commP.shutdown(); 
     commP.stopSocketTask();
     (void) commP.joinSocketTask(nullptr);
     """
