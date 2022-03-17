@@ -369,24 +369,18 @@ module DepA {
 
     phase Fpp.ToCpp.Phases.startTasks """
     // Initialize socket server if and only if there is a valid specification
-    const char * hostNameP = "127.0.0.5"; 
+    const char * hostNameP = "0.0.0.0"; 
     U32 portNumberP = 50020; 
     if (hostNameP != nullptr && portNumberP != 0) {
         Os::TaskString name("ReceiveTaskP");
         // Uplink is configured for receive so a socket task is started
         commP.configure(hostNameP, portNumberP); 
-        commP.startSocketTask(
-            name,
-            true,
-            ConfigConstants::commP::PRIORITY,
-            ConfigConstants::commP::STACK_SIZE
-        );
+        commP.open(); 
     }
     """
 
     phase Fpp.ToCpp.Phases.freeThreads """
-    commP.stopSocketTask();
-    (void) commP.joinSocketTask(nullptr);
+    commP.close(); 
     """
 
     }
@@ -400,6 +394,32 @@ module DepA {
         phase Fpp.ToCpp.Phases.configComponents """
         downlinkP.setup(ConfigObjects::downlinkP::framing);
         """
+
+    }
+
+    instance fileDownlinkP: Svc.FileDownlink base id 0x5200 \
+    queue size 30 \
+    stack size Default.stackSize \
+    priority 100 \
+    {
+
+    phase Fpp.ToCpp.Phases.configConstants """
+    enum {
+        TIMEOUT = 1000,
+        COOLDOWN = 1000,
+        CYCLE_TIME = 1000,
+        FILE_QUEUE_DEPTH = 10
+    };
+    """
+
+    phase Fpp.ToCpp.Phases.configComponents """
+    fileDownlinkP.configure(
+        ConfigConstants::fileDownlinkP::TIMEOUT,
+        ConfigConstants::fileDownlinkP::COOLDOWN,
+        ConfigConstants::fileDownlinkP::CYCLE_TIME,
+        ConfigConstants::fileDownlinkP::FILE_QUEUE_DEPTH
+    );
+    """
 
     }
 

@@ -368,7 +368,7 @@ module DepA2 {
 
     phase Fpp.ToCpp.Phases.startTasks """
     // Initialize socket server if and only if there is a valid specification
-    const char * hostNameP = "127.0.0.5"; 
+    const char * hostNameP = "0.0.0.0"; 
     U32 portNumberP = 50020; 
     if (hostNameP != nullptr && portNumberP != 0) {
         Os::TaskString name("ReceiveTaskP");
@@ -404,5 +404,10 @@ module DepA2 {
 
     }
     instance SimpleReceiver: DepA2.SimpleReceiver base id 0x4D00
+
+     instance fileUplinkP: Svc.FileUplink base id 0x5200 \
+    queue size 30 \
+    stack size Default.stackSize \
+    priority 100
 
 }

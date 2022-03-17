@@ -42,6 +42,7 @@ namespace DepA2{
         namespace fileDownlink { enum { WARN = 3, FATAL = 5 }; }
         namespace fileManager { enum { WARN = 3, FATAL = 5 }; }
         namespace fileUplink { enum { WARN = 3, FATAL = 5 }; }
+        namespace fileUplinkP { enum { WARN = 3, FATAL = 5 }; }
         namespace prmDb { enum { WARN = 3, FATAL = 5 }; }
         namespace rateGroup1Comp { enum { WARN = 3, FATAL = 5 }; }
         namespace rateGroup2Comp { enum { WARN = 3, FATAL = 5 }; }

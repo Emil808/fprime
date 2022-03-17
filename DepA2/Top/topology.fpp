@@ -9,7 +9,7 @@ module DepA2{
     enum Ports_StaticMemory{
         downlink 
         uplink 
-        commP
+        uplinkP
         hub
     }
 
@@ -49,6 +49,7 @@ module DepA2{
         instance commP
         instance SimpleReceiver
         instance uplinkP
+        instance fileUplinkP
         # ------------------------------
         # pattern graph specifiers
         # ------------------------------
@@ -127,14 +128,16 @@ module DepA2{
         }
 
         connections HubUplink{
-            commP.allocate -> staticMemory.bufferAllocate[Ports_StaticMemory.commP]
+            commP.allocate -> staticMemory.bufferAllocate[Ports_StaticMemory.uplinkP]
             commP.$recv -> uplinkP.framedIn
-            uplinkP.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.commP]
+            uplinkP.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.uplinkP]
 
-            uplinkP.bufferAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.hub]
-            uplinkP.bufferOut -> hub.dataIn
-            uplinkP.bufferDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub]
+            uplinkP.bufferAllocate -> fileUplinkBufferManager.bufferGetCallee
+            hub.buffersOut -> fileUplinkP.bufferSendIn
+            fileUplinkP.bufferSendOut -> fileUplinkBufferManager.bufferSendIn
+            hub.dataInDeallocate -> fileUplinkBufferManager.bufferSendIn            
             
+            uplinkP.bufferOut -> hub.dataIn
             hub.portOut[0] -> SimpleReceiver.valIn
         }
     }

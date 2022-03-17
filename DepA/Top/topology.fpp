@@ -11,6 +11,7 @@ module DepA{
         uplink 
         hub
         downlinkP
+        commP
     }
 
     topology DepA{
@@ -48,6 +49,7 @@ module DepA{
         instance downlinkP
         instance commP
         instance SimpleProducer
+        instance fileDownlinkP
 
         # ------------------------------
         # pattern graph specifiers
@@ -110,6 +112,7 @@ module DepA{
             linuxTimer.CycleOut -> rateGroupDriverComp.CycleIn
             # Rate group 1
             rateGroupDriverComp.CycleOut[Ports_RateGroups.rateGroup1] -> rateGroup1Comp.CycleIn
+            rateGroup1Comp.RateGroupMemberOut[1] -> fileDownlinkP.Run
             rateGroup1Comp.RateGroupMemberOut[2] -> chanTlm.Run
             rateGroup1Comp.RateGroupMemberOut[3] -> fileDownlink.Run
             rateGroup1Comp.RateGroupMemberOut[4] -> systemResources.run
@@ -129,6 +132,9 @@ module DepA{
         connections hub{
             SimpleProducer.valOut -> hub.portIn[0]
             
+            hub.bufferDeallocate -> fileDownlinkP.bufferReturn
+            fileDownlinkP.bufferSendOut -> hub.buffersIn 
+
             hub.dataOutAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.hub]
             hub.dataOut -> downlinkP.bufferIn
             downlinkP.bufferDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub]
