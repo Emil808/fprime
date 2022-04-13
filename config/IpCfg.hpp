@@ -20,9 +20,9 @@ enum IpCfg {
     SOCKET_IP_RECV_FLAGS = 0,              // recv FLAGS argument
     SOCKET_MAX_ITERATIONS = 0xFFFF,        // Maximum send/recv attempts before an error is returned
     SOCKET_RETRY_INTERVAL_MS = 1000,       // Interval between connection retries before main recv thread starts
-    SOCKET_MAX_HOSTNAME_SIZE = 256         // Maximum stored hostname
+    SOCKET_MAX_HOSTNAME_SIZE = 256,        // Maximum stored hostname
 };
 
-
+#define MAX_CLIENTS 16
 
 #endif //REF_IPCFG_HPP
