@@ -57,7 +57,18 @@ namespace Drv {
 
       void test_parallel_recv(Drv::TcpClientSocket* socket_array, U32 n_clients); 
       
+      void test_id_protocol(Drv::TcpClientSocket* socket_array, U32 n_clients); 
+
+      void test_broadcast(Drv::TcpClientSocket* socket_array, U32 n_clients, U32 iterations); 
+      
+      void test_client_bounce_back_from_broadcast(Drv::TcpClientSocket* socket_array, U32 n_clients, U32 iterations); 
+
+      void test_max_connections(Drv::TcpClientSocket* socket_array, U32 n_clients, U32 max_connections); 
       void test_socket_manager();
+
+      void test_setup(); 
+
+      void test_node(Drv::TcpServerSocket* server, Drv::TcpClientSocket* client); 
       
       // ----------------------------------------------------------------------
       // Helpers
@@ -66,6 +77,12 @@ namespace Drv {
       void generate_device_id(U8* idBuffer); 
 
       void verify_device_id(U8* clientBuffer, U32 serverRecv); 
+
+      void mock_server_swarm_protocol(Drv::TcpServerSocket* server, U32 serverID, U32 nodeClientID); 
+    
+      void mock_client_swarm_protocol(Drv::TcpClientSocket *client, U32 serverID, U32 nodeClientID);
+
+      
     private:
 
       // ----------------------------------------------------------------------

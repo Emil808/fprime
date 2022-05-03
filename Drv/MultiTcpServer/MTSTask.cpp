@@ -14,15 +14,17 @@ struct readTaskParams{
 namespace Drv{
 
     
-    AcceptClientTask::AcceptClientTask(): taskCount(0), m_stop(false){}
+    AcceptClientTask::AcceptClientTask(): taskCount(0), m_stop(false), m_id_protocol(true){}
     AcceptClientTask::~AcceptClientTask(){}
 
   
     void AcceptClientTask::startAcceptTask(const Fw::StringBase &name,
-                             const bool reconnect ,
+                             const bool reconnect,
+                             const bool protocol, 
                              const NATIVE_INT_TYPE priority ,
                              const NATIVE_INT_TYPE stack ,
                              const NATIVE_INT_TYPE cpuAffinity ){
+    this->m_id_protocol = protocol; 
     this->task_affinity = cpuAffinity; 
     this->task_priority = priority; 
     this->task_stack = stack; 
@@ -81,7 +83,7 @@ namespace Drv{
 
         AcceptClientTask* self = reinterpret_cast<AcceptClientTask*>(pointer); 
 
-        NATIVE_INT_TYPE clientFd = -1; 
+        NATIVE_INT_TYPE clientFd = -1; //todo name change, this is actually the index within manager, not the Fd
 
         Os::TaskString name; 
         char new_task_name[FW_TASK_NAME_MAX_SIZE]; 
@@ -91,12 +93,10 @@ namespace Drv{
         
         struct readTaskParams params;
         do{
-            //get server fd
-            //check that server fd is still alive (not -1)
             //Fw::Logger::logMsg("[INFO] Entered accept task LOOP\n");
             //Fw::Logger::logMsg("[INFO] task count = %d\nMax Task = %d\n", self->taskCount, MAX_TASKS);
             //Fw::Logger::logMsg("[INFO] not self->taskCount == MAX_TASKS result = %d\n", not (self->taskCount == MAX_TASKS)); 
-            if(not (self->taskCount == MAX_TASKS)){ //not yet reached maximum clients
+            if(not (self->taskCount == MAX_TASKS) && self->getSocketManager().getNConnected() < MAX_CLIENTS){ //not yet reached maximum clients
                 Fw::Logger::logMsg("[INFO] Attempting to accept\n");
                  
                 status = self->getSocketManager().open(clientFd); //accept a client
@@ -107,17 +107,29 @@ namespace Drv{
                     clientFd = -1; 
                      
                     Fw::Logger::logMsg("Failed to accept client with status %d and errno d\n", status, errno); 
-                    Os::Task::delay(SOCKET_RETRY_INTERVAL_MS); 
+                    Os::Task::delay(SOCKET_RETRY_INTERVAL_MS); //delay present in original socket read task 
                 }
-                else{ // Successfully accepted a client
+                
+                if(status == SOCK_SUCCESS && self->m_id_protocol){ //run initial connection protocols
+                    status = self->getSocketManager().getSocketHandler(clientFd).recvClientID(); //receive client ID
+                    if(status != SOCK_SUCCESS){
+                        Fw::Logger::logMsg("Client Failed to give Identification. Recv Status = %d\n", status, errno); 
+                        self->getSocketManager().close(clientFd); 
+                    }
+                    else{
+                        status = self->getSocketManager().getSocketHandler(clientFd).sendSrvrID(self->getDeviceID()); 
+                    }
+                }
+                
+
+                if(status == SOCK_SUCCESS){ // Successfully accepted a client
                     for(int i = 0; i < MAX_TASKS; i++){
                         //might need a lock where im accessing variables from self
                         if(not self->task_pool[i].isStarted()){ //find available task handler
-                            self->taskCount += 1; \
+                            self->taskCount += 1; 
                             self->task_pool[i].setStarted(true); 
                             snprintf(new_task_name, FW_TASK_NAME_MAX_SIZE, "MTSReadTask_%d", i);
                             name = new_task_name; 
-
                             params = {clientFd, self}; 
                             Os::Task::TaskStatus stat = self->task_pool[i].start(name, AcceptClientTask::readTask, &params); //using task default priority, stack, affinity
                             FW_ASSERT(Os::Task::TASK_OK == stat, static_cast<NATIVE_INT_TYPE>(stat));
@@ -126,6 +138,8 @@ namespace Drv{
                         }
                     }
                 }
+            
+                status = SOCK_SUCCESS; //reset status to prevent do while from stopping
             }
             else{ // servicing maximum clients
                 
@@ -166,8 +180,6 @@ namespace Drv{
         
         I32 index = params->client_index;
         
-       
-        //before starting read loop,
         //receive and verify the device id.
         //could be a parameter in the accept task that can be set if user wants to use device IDs
         do{
@@ -178,14 +190,15 @@ namespace Drv{
 
             //Read from network connection
             if(self->getSocketManager().getSocketHandler(index).isOpened() and (not self->m_stop)){
-                Fw::Buffer buffer = self->getBuffer(); 
+                Fw::Buffer buffer = self->getBuffer(); //todo handle failed getBuffer from bufferManager
                 U8* data = buffer.getData(); 
                 FW_ASSERT(data); 
 
                 I32 size = static_cast<I32>(buffer.getSize()); 
                 size = (size >= 0) ? size : MAXIMUM_SIZE; 
 
-                //if only receiving, how to detect loss of connection? 
+                // if only receiving, how to detect loss of connection? 
+                // closing client will send an empty packet
                 
                 status = self->getSocketManager().getSocketHandler(index).recv(data, size); 
 
@@ -201,6 +214,10 @@ namespace Drv{
             }
         }while(not self->m_stop && (status ==SOCK_SUCCESS || status == SOCK_INTERRUPTED_TRY_AGAIN)); 
 
-        self->getSocketManager().getSocketHandler(index).close(); 
-    } 
+        self->getSocketManager().close(index); 
+    }
+
+    bool AcceptClientTask::isUsingIdProtocol(){
+        return this->m_id_protocol; 
+    }
 }

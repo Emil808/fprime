@@ -24,5 +24,6 @@ enum IpCfg {
 };
 
 #define MAX_CLIENTS 16
+#define MAX_HOSTFILE_NAME_SIZE 256 
 
 #endif //REF_IPCFG_HPP

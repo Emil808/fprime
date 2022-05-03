@@ -4,6 +4,9 @@ set(SOURCE_FILES
         "${CMAKE_CURRENT_LIST_DIR}/MultiTcpServerSocket.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/MultiTcpServerManager.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/MTSTask.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/MultiTcpClientSocket.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/SocketOpenTask.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/TcpClientManager.cpp"
     )
     set(MOD_DEPS
     Os

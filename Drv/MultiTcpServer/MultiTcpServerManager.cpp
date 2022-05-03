@@ -29,6 +29,7 @@
 namespace Drv{
     MultiTcpServerManager::MultiTcpServerManager(): m_base_fd(-1), m_timeoutSeconds(0), m_timeoutMicroseconds(0), m_port(0), m_open(false), current_client_connections(0) {
         ::memset(m_hostname, 0, sizeof(m_hostname));
+        FD_ZERO(&this->listener_socket); 
     }
 
     MultiTcpServerManager::~MultiTcpServerManager(){} 
@@ -41,6 +42,9 @@ namespace Drv{
     this->m_timeoutMicroseconds = send_timeout_microseconds;
     this->m_port = port;
     (void) Fw::StringUtils::string_copy(this->m_hostname, hostname, SOCKET_MAX_HOSTNAME_SIZE);
+
+    this->set_timeout.tv_sec = send_timeout_seconds; 
+    this->set_timeout.tv_usec = send_timeout_microseconds; 
     return SOCK_SUCCESS;
     }
 
@@ -84,24 +88,38 @@ namespace Drv{
             ::close(serverFd);
             return SOCK_FAILED_TO_LISTEN; // What we have here is a failure to communicate
         }
+
+        FD_SET(this->m_base_fd, &this->listener_socket); 
         return SOCK_SUCCESS; 
+
+    }
+
+    
+    void MultiTcpServerManager::closeServer(){
+        ::close(this->m_base_fd); 
     }
 
     SocketIpStatus MultiTcpServerManager::open(NATIVE_INT_TYPE& index){
-        SocketIpStatus status = SOCK_SUCCESS; 
-        //Mutex locko
-        for(int i = 0; i < MAX_CLIENTS; i++){
-            if(sockets[i].isOpened() == false){
-                index = i; 
-                status = sockets[i].open(); 
-                break; 
+        SocketIpStatus status = SOCK_FAILED_TO_ACCEPT; 
+        int activity = select(this->m_base_fd+1, &this->listener_socket, NULL, NULL, &this->set_timeout);
+        if(activity){ //activity on the listener socket
+            for(int i = 0; i < MAX_CLIENTS; i++){
+                if(sockets[i].isOpened() == false){
+                    index = i; 
+                    status = sockets[i].open(); 
+                    break; 
+                }
             }
+            if(status == SOCK_SUCCESS){
+                this->current_client_connections += 1; 
+            }
+             
         }
-        if(status == SOCK_SUCCESS){
-            this->current_client_connections += 1; 
+        else{
+            FD_SET(this->m_base_fd, &this->listener_socket); //this would casue a run time error, m_base_fd would change to -1 on shutdown; 
         }
-        //mutex unlock
-        return status; 
+        //will get to here if no open socket, or accepting timed out
+        return status;
     }
     void MultiTcpServerManager::shutdown(){
         (void)::shutdown(this->m_base_fd, SHUT_RDWR);
@@ -137,6 +155,20 @@ namespace Drv{
     }
 
     Drv::MultiTcpServerSocket& MultiTcpServerManager::getSocketHandler(U32 socket_index){
+        FW_ASSERT(socket_index < MAX_CLIENTS); 
         return this->sockets[socket_index];
+    }
+
+    Drv::MultiTcpServerSocket& MultiTcpServerManager::getSocketHandlerByID(U32 deviceId){
+        FW_ASSERT(deviceId); 
+
+        for(int i = 0; i < MAX_CLIENTS; i++){
+            if(this->sockets[i].getClientDeviceID() == deviceId){
+                return this->sockets[i]; 
+            }
+        }
+        return this->sockets[0]; //todo, better handle on failure to find correct handler
+
+
     }
 }

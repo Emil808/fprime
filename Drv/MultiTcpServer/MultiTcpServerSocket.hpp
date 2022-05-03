@@ -22,7 +22,7 @@
 #include <IpCfg.hpp> 
 #include <Os/Mutex.hpp>
 
-#define MAX_CLIENTS 16
+// Wrapper for IpSocket implementations, to provide features to handle multiple of them. 
 
 namespace Drv{
     class MultiTcpServerSocket : public TcpServerSocket{
@@ -41,7 +41,10 @@ namespace Drv{
             SocketIpStatus open();
             SocketIpStatus openProtocol(NATIVE_INT_TYPE& fd); 
             SocketIpStatus recvClientID(); 
+            SocketIpStatus sendSrvrID(U32 ID); 
             U32 getClientDeviceID();
+
+            void close(); 
         PROTECTED:
             
         private:

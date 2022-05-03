@@ -132,9 +132,34 @@ namespace Drv{
         //convert the U8 data: hex -> int
         ID = (data[2] << 24) + (data[3] << 16) + (data[4] << 8) + (data[5] << 0); 
         this->clientDeviceID = ID; 
-
+        
         return SOCK_SUCCESS; 
 
+    }
+
+    SocketIpStatus MultiTcpServerSocket::sendSrvrID(U32 ID){
+        SocketIpStatus status = SOCK_SUCCESS; 
+        U8 data[6]; 
+        
+        //format data into 'I', 'D', 0x, 0x, 0x, 0x
+        data[0] = 'I'; data[1] = 'D'; 
+        data[2] = (ID >> 24) & 0xFF; 
+        data[3] = (ID >> 16) & 0xFF; 
+        data[4] = (ID >> 8) & 0xFF; 
+        data[5] = (ID >> 0) & 0xFF; 
+
+        status = TcpServerSocket::send(data, sizeof(data)); 
+        if(status != SOCK_SUCCESS){
+            TcpServerSocket::close();  
+        }
+
+        return status; 
+        
+    }
+
+    void MultiTcpServerSocket::close(){
+        TcpServerSocket::close(); 
+        this->clientDeviceID = 0; 
     }
 
 }

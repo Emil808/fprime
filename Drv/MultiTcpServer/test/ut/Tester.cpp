@@ -18,9 +18,10 @@
 #include <Os/Task.hpp>
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #define INSTANCE 0
-#define MAX_HISTORY_SIZE 10
+#define MAX_HISTORY_SIZE 1000
 
 namespace Drv {
 
@@ -107,6 +108,8 @@ namespace Drv {
   }
 
   void Tester::test_client_opening_ID(Drv::TcpClientSocket* client, U32 n_clients){
+    ASSERT_TRUE(client); 
+    ASSERT_GT(n_clients, 0);
     // U8 buffer[sizeof(m_data_storage)] = {};
     Drv::SocketIpStatus status1 = Drv::SOCK_SUCCESS;
     Drv::SocketIpStatus status2 = Drv::SOCK_SUCCESS;
@@ -160,6 +163,7 @@ namespace Drv {
   }
   void Tester::test_with_loop(U32 iterations, bool recv_thread)
   {
+    ASSERT_GT(iterations, 0); 
     //U8 buffer[sizeof(m_data_storage)] = {};
     //Drv::SocketIpStatus status1 = Drv::SOCK_SUCCESS;
     Drv::SocketIpStatus status2 = Drv::SOCK_SUCCESS;
@@ -175,7 +179,7 @@ namespace Drv {
     // start accept task
     if (recv_thread){
       Os::TaskString name("Accept Client Thread");
-      this->component.startAcceptTask(name, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT); 
+      this->component.startAcceptTask(name, true, false, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT); 
     }
 
     for (U32 i = 0; i < iterations && serverStat == SOCK_SUCCESS; i++){
@@ -186,8 +190,8 @@ namespace Drv {
       ASSERT_EQ(status2, SOCK_SUCCESS); 
 
       Os::Task::delay(10); //Delay to let other threads get to update Nconnected
-      EXPECT_EQ(this->component.getSocketManager().getNConnected(), 1); 
-      EXPECT_EQ(this->component.getTaskCount(), 1); 
+      EXPECT_EQ(this->component.getSocketManager().getNConnected(), i+1); 
+      EXPECT_EQ(this->component.getTaskCount(), i+1); 
 
       m_data_buffer.setSize(sizeof(m_data_storage));
       Drv::Test::fill_random_buffer(m_data_buffer);
@@ -210,6 +214,8 @@ namespace Drv {
   }
 
   void Tester::test_parallel_recv(Drv::TcpClientSocket* socket_array, U32 n_clients){
+    ASSERT_TRUE(socket_array); 
+    ASSERT_GT(n_clients, 0); 
     //Drv::SocketIpStatus status2 = Drv::SOCK_SUCCESS;
     Drv::SocketIpStatus serverStat = Drv::SOCK_SUCCESS;
     I32 client_count = static_cast<I32>(n_clients); 
@@ -221,7 +227,7 @@ namespace Drv {
      EXPECT_EQ(serverStat, SOCK_SUCCESS);
 
     Os::TaskString name("Accept Client Thread");
-    this->component.startAcceptTask(name, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT); 
+    this->component.startAcceptTask(name, true, false, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT); 
     
     //open multiple clients
     //have clients send, which invokes the recv thread
@@ -256,6 +262,466 @@ namespace Drv {
     this->component.joinAcceptTask(nullptr); 
   }
 
+  void Tester::test_id_protocol(Drv::TcpClientSocket* socket_array, U32 n_clients){
+    ASSERT_TRUE(socket_array); 
+    ASSERT_GT(n_clients, 0);
+    //Drv::SocketIpStatus status2 = Drv::SOCK_SUCCESS;
+    Drv::SocketIpStatus serverStat = Drv::SOCK_SUCCESS;
+    I32 client_count = static_cast<I32>(n_clients); 
+    U16 port =  Drv::Test::get_free_port();
+    ASSERT_NE(0, port);
+
+    this->component.configure("127.0.0.1", port, 0, 100);
+    serverStat = this->component.startup();                // Server starts listening here at success
+    EXPECT_EQ(serverStat, SOCK_SUCCESS);
+
+    Os::TaskString name("Accept Client Thread");
+    this->component.startAcceptTask(name, true, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT); 
+
+    U8 device_ID[6] = "ID"; 
+
+    for(int i = 0; i < client_count; i++){
+      socket_array[i].configure("127.0.0.1", port, 0, 100);
+      ASSERT_EQ(socket_array[i].open(), SOCK_SUCCESS); 
+      Os::Task::delay(10); //delay for other threads to update N-connected
+      EXPECT_EQ(this->component.getSocketManager().getNConnected(), i+1); 
+
+      generate_device_id(device_ID);
+
+      socket_array[i].send(device_ID, sizeof(device_ID)); 
+
+      Os::Task::delay(10); 
+    }
+     
+    
+    ASSERT_EQ(this->component.getSocketManager().getNConnected(), n_clients); 
+
+    for(int i = 0; i < client_count; i++){
+      m_spinner = false;
+
+      m_data_buffer.setSize(sizeof(m_data_storage));
+      Drv::Test::fill_random_buffer(m_data_buffer);
+      socket_array[i].send(m_data_buffer.getData(), m_data_buffer.getSize()); 
+      while (not m_spinner) {}
+    }
+    for(int i = 0; i < client_count; i++){
+      socket_array[i].close(); 
+    }
+
+    this->component.shutdown();
+    EXPECT_EQ(this->component.getSocketManager().getNConnected(), 0);
+    this->component.stopAcceptTask(); 
+    this->component.joinAcceptTask(nullptr); 
+  }
+
+  void Tester::test_broadcast(Drv::TcpClientSocket* socket_array, U32 n_clients, U32 iterations){
+    ASSERT_TRUE(socket_array); 
+    ASSERT_GT(n_clients, 0);
+    ASSERT_GT(iterations, 0); 
+    Drv::SocketIpStatus status = Drv::SOCK_SUCCESS;
+    Drv::SocketIpStatus serverStat = Drv::SOCK_SUCCESS;
+    Drv::SendStatus sendStat = Drv::SendStatus::SEND_OK;  
+    I32 client_count = static_cast<I32>(n_clients); 
+    U16 port =  Drv::Test::get_free_port();
+    ASSERT_NE(0, port);
+
+    this->component.configure("127.0.0.1", port, 0, 100);
+    serverStat = this->component.startup();                // Server starts listening here at success
+    EXPECT_EQ(serverStat, SOCK_SUCCESS);
+
+    // Start Accept Task
+    Os::TaskString name("Accept Client Thread");
+    this->component.startAcceptTask(name, true, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT); 
+
+    U8 device_ID[6] = {'I', 'D'}; 
+
+    // Set Up clients and connect. With deviceId protocol
+    for(int i = 0; i < client_count; i++){
+      socket_array[i].configure("127.0.0.1", port, 0, 100);
+      ASSERT_EQ(socket_array[i].open(), SOCK_SUCCESS); 
+      Os::Task::delay(10); //delay for other threads to update N-connected
+      EXPECT_EQ(this->component.getSocketManager().getNConnected(), i+1); 
+
+      generate_device_id(device_ID);
+
+      socket_array[i].send(device_ID, sizeof(device_ID)); 
+
+      Os::Task::delay(10); 
+    }
+     
+    
+    ASSERT_EQ(this->component.getSocketManager().getNConnected(), n_clients); 
+
+    // Server broadcast to all
+    U8 test_data[] = {'I', 'D', '2', '0', '2', '0', 'I', 'D', '0', '0', '0', '0', 'A', 'B', 'C'}; 
+
+    m_data_buffer.setData(test_data); 
+    m_data_buffer.setSize(sizeof(test_data)); 
+    Drv::Test::validate_random_data(m_data_buffer.getData(), test_data, m_data_buffer.getSize()); 
+
+    U8 buffer[sizeof(m_data_storage)] = {};
+    I32 size = sizeof(m_data_storage);
+
+    for(U32 k = 0; k < iterations; k++){
+      test_data[14] += k; // changes test data a little bit each iteration
+
+      sendStat = this->invoke_to_send(0, m_data_buffer); 
+
+      ASSERT_EQ(sendStat, Drv::SendStatus::SEND_OK); 
+
+      for(int i = 0; i < client_count; i++){
+        status = socket_array[i].recv(buffer, size); 
+
+        EXPECT_EQ(status, SOCK_SUCCESS); 
+
+        Drv::Test::validate_random_data(m_data_buffer.getData(), buffer, m_data_buffer.getSize()); 
+      }
+    }
+    
+    //finished, so delete m_data_buffer
+    m_data_buffer.setSize(0);  
+
+    for(int i = 0; i < client_count; i++){
+      socket_array[i].close(); 
+    }
+
+    this->component.shutdown();
+    EXPECT_EQ(this->component.getSocketManager().getNConnected(), 0);
+    this->component.stopAcceptTask(); 
+    this->component.joinAcceptTask(nullptr); 
+
+  }
+
+  void Tester::test_client_bounce_back_from_broadcast(Drv::TcpClientSocket* socket_array, U32 n_clients, U32 iterations){
+    ASSERT_TRUE(socket_array); 
+    ASSERT_GT(n_clients, 0);
+    ASSERT_GT(iterations, 0); 
+    Drv::SocketIpStatus status = Drv::SOCK_SUCCESS;
+    Drv::SocketIpStatus serverStat = Drv::SOCK_SUCCESS;
+    Drv::SendStatus sendStat = Drv::SendStatus::SEND_OK;  
+    I32 client_count = static_cast<I32>(n_clients); 
+    U16 port =  Drv::Test::get_free_port();
+    ASSERT_NE(0, port);
+
+    U8 device_ID_list [n_clients][6]; 
+
+    this->component.configure("127.0.0.1", port, 0, 100);
+    serverStat = this->component.startup();                // Server starts listening here at success
+    EXPECT_EQ(serverStat, SOCK_SUCCESS);
+
+    // Start Accept Task
+    Os::TaskString name("Accept Client Thread");
+    this->component.startAcceptTask(name, true, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT); 
+
+    U8 device_ID[6] = {'I', 'D'}; 
+
+    // Set Up clients and connect. With deviceId protocol
+    for(int i = 0; i < client_count; i++){
+      socket_array[i].configure("127.0.0.1", port, 0, 100);
+      ASSERT_EQ(socket_array[i].open(), SOCK_SUCCESS); 
+      Os::Task::delay(10); //delay for other threads to update N-connected
+      EXPECT_EQ(this->component.getSocketManager().getNConnected(), i+1); 
+
+      generate_device_id(device_ID);
+      device_ID_list[i][0] = device_ID[0]; 
+      device_ID_list[i][1] = device_ID[1]; 
+      device_ID_list[i][2] = device_ID[2]; 
+      device_ID_list[i][3] = device_ID[3]; 
+      device_ID_list[i][4] = device_ID[4]; 
+      device_ID_list[i][5] = device_ID[5]; 
+      socket_array[i].send(device_ID, sizeof(device_ID)); 
+
+      Os::Task::delay(10); 
+    }
+     
+    
+    ASSERT_EQ(this->component.getSocketManager().getNConnected(), n_clients); 
+
+    // Server broadcast to all
+    // Test Header format
+    // 6 bytes sender ID, 6 bytes receiver ID, 4 bytes data length, x-bytes data
+    U8 test_data[] = {'I', 'D', '2', '0', '2', '0', 'I', 'D', '0', '0', '0', '0', '0', '0', '0', '3', 'A', 'B', 'C'}; 
+    U8 bounce_data[19]; 
+    m_data_buffer.setData(test_data); 
+    m_data_buffer.setSize(sizeof(test_data)); 
+    Drv::Test::validate_random_data(m_data_buffer.getData(), test_data, m_data_buffer.getSize()); 
+
+    U8 buffer[sizeof(m_data_storage)] = {};
+    I32 size = sizeof(m_data_storage);
+
+
+    U8 senderID[6];
+    U32 receiverID_int; 
+    char data_length_s[5]; 
+    U8 data[sizeof(m_data_storage)] ={}; 
+    I32 data_length; 
+
+    for(U32 k = 0; k < iterations; k++){
+      m_data_buffer.setData(test_data); 
+      m_data_buffer.setSize(sizeof(test_data)); 
+      test_data[14] += k; // changes test data a little bit each iteration
+
+      sendStat = this->invoke_to_send(0, m_data_buffer); //send broadcast message to all
+
+      ASSERT_EQ(sendStat, Drv::SendStatus::SEND_OK); 
+
+      for(int i = 0; i < client_count; i++){ //for each client 
+        status = socket_array[i].recv(buffer, size); //receive, 
+        EXPECT_EQ(status, SOCK_SUCCESS); 
+
+        //Process 
+
+        //extract sender ID, 
+        senderID[0] = buffer[0]; 
+        senderID[1] = buffer[1]; 
+        senderID[2] = buffer[2]; 
+        senderID[3] = buffer[3]; 
+        senderID[4] = buffer[4]; 
+        senderID[5] = buffer[5]; 
+
+        //extract receive ID (expect self's ID or broadcasts
+        receiverID_int = (buffer[8] << 24) + (buffer[9] << 16) + (buffer[10] << 8) + buffer[11]; 
+        EXPECT_TRUE( (receiverID_int == 0x30303030)); //expecting broadcast
+        //extract data length
+        data_length_s[0] = buffer[12]; 
+        data_length_s[1] = buffer[13];
+        data_length_s[2] = buffer[14];
+        data_length_s[3] = buffer[15];
+        data_length = atoi(data_length_s); 
+
+        for(I32 j = 0; j < data_length; j++){ //extract remaining data. 
+          if(static_cast<U32>(j) > sizeof(m_data_storage)){
+            break; 
+          }
+          data[i] = buffer[j+16]; 
+        }
+        
+        //repackage data, 
+        //pack senders ID
+        bounce_data[0] = device_ID_list[i][0]; 
+        bounce_data[1] = device_ID_list[i][1]; 
+        bounce_data[2] = device_ID_list[i][2]; 
+        bounce_data[3] = device_ID_list[i][3]; 
+        bounce_data[4] = device_ID_list[i][4]; 
+        bounce_data[5] = device_ID_list[i][5];
+
+        //pack receiverd ID
+        bounce_data[6] = senderID[0];
+        bounce_data[7] = senderID[1];
+        bounce_data[8] = senderID[2];
+        bounce_data[9] = senderID[3];
+        bounce_data[10] = senderID[4];
+        bounce_data[11] = senderID[5];
+
+        //pack data length
+        bounce_data[12] = '0'; 
+        bounce_data[13] = '0'; 
+        bounce_data[14] = '0';
+        bounce_data[15] = '3'; 
+        
+        //pack data
+        bounce_data[16] = data[0]; 
+        bounce_data[17] = data[1]; 
+        bounce_data[18] = data[2]; 
+        
+        //send data
+        m_data_buffer.setData(bounce_data); 
+        m_data_buffer.setSize(sizeof(bounce_data)); 
+
+        socket_array[i].send(bounce_data, sizeof(bounce_data)); 
+        Os::Task::delay(10); // let receive thread process and server handle data coming in
+
+        //recv handler will verify data
+      }
+    }
+    Os::Task::delay(10); //let recv thread catch up
+
+    //finished, so delete m_data_buffer
+    m_data_buffer.setSize(0);  
+
+    for(int i = 0; i < client_count; i++){
+      socket_array[i].close(); 
+    }
+
+    this->component.shutdown();
+    EXPECT_EQ(this->component.getSocketManager().getNConnected(), 0);
+    this->component.stopAcceptTask(); 
+    this->component.joinAcceptTask(nullptr); 
+
+  } 
+
+  void Tester::test_max_connections(Drv::TcpClientSocket* socket_array, U32 n_clients, U32 max_connections){
+    ASSERT_TRUE(socket_array); 
+    ASSERT_GT(n_clients, 0);
+    ASSERT_EQ(max_connections, n_clients+1); 
+    Drv::SocketIpStatus status = Drv::SOCK_SUCCESS;
+    Drv::SocketIpStatus serverStat = Drv::SOCK_SUCCESS;
+    Drv::SendStatus sendStat = Drv::SendStatus::SEND_OK;  
+    
+    U16 port =  Drv::Test::get_free_port();
+    ASSERT_NE(0, port);
+
+    
+    this->component.configure("127.0.0.1", port, 0, 100);
+    serverStat = this->component.startup();                // Server starts listening here at success
+    EXPECT_EQ(serverStat, SOCK_SUCCESS);
+
+    // Start Accept Task
+    Os::TaskString name("Accept Client Thread");
+    this->component.startAcceptTask(name, true, false, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT); //accept task no ID protocol
+
+    //initialize n_clients clients
+    for(U32 i = 0; i < n_clients; i++){
+      socket_array[i].configure("127.0.0.1", port, 0, 100);
+      ASSERT_EQ(socket_array[i].open(), SOCK_SUCCESS); 
+      Os::Task::delay(10); //delay for other threads to update N-connected
+    }
+
+    EXPECT_EQ(this->component.getSocketManager().getNConnected(), n_clients); 
+
+    //check their connections
+    for(U32 i = 0; i < n_clients; i++){
+      EXPECT_TRUE(socket_array[i].isOpened()); 
+    }
+    
+    Os::Task::delay(10);
+    // at this point, we should have reached maximum clients, of 16, then the 17th connection should fail? 
+    // but it is getting accepted, and returning success
+
+    //
+    socket_array[max_connections-1].configure("127.0.0.1", port, 1, 100);
+    status = socket_array[max_connections-1].open(); 
+    while(1){}; 
+    ASSERT_EQ(status, SOCK_FAILED_TO_CONNECT); //expect failure
+
+    socket_array[0].close(); 
+    Os::Task::delay(10);
+    EXPECT_EQ(this->component.getSocketManager().getNConnected(), n_clients-1);
+
+    
+    status = socket_array[max_connections-1].open(); //connect 17th
+    ASSERT_EQ(status, SOCK_SUCCESS); 
+    
+    EXPECT_TRUE(socket_array[max_connections-1].isOpened()); 
+
+    for(U32 i = 1; i < max_connections; i++){
+      socket_array[i].close(); 
+    }
+
+    this->component.shutdown();
+    EXPECT_EQ(this->component.getSocketManager().getNConnected(), 0);
+    this->component.stopAcceptTask(); 
+    this->component.joinAcceptTask(nullptr); 
+    
+  }
+
+  void Tester::test_setup(){
+
+    SocketIpStatus status = SOCK_SUCCESS; 
+    status = this->component.configure("127.0.0.1", 8080, 0, 100); //configure server
+    ASSERT_EQ(status, SOCK_SUCCESS); 
+
+    this->component.setDeviceID(45);                                   //set Device ID
+    char hostfile_name[] = "test/ut/file/test_hostfile_0.txt";                       //set hostefile 
+    this->component.setHostFile(hostfile_name, sizeof(hostfile_name)); 
+    
+    this->component.startup(); 
+
+    Os::TaskString name_acceptTask("AcceptTask"); 
+    this->component.startAcceptTask(name_acceptTask, true, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT);
+    Os::TaskString name_openTask("OpenTask"); 
+    this->component.startSocketOpenTask(name_openTask, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT); 
+
+    //want to test that at least one task is opening, gdb will make the expect true,
+    //running normally will cause it to fail
+    // Os::Task::delay(100); 
+    // EXPECT_GT(this->component.getTaskCount(), 0); 
+
+    this->component.stopAcceptTask(); 
+    this->component.stopSocketOpenTask(); 
+    Os::Task::delay(10); 
+
+    this->component.joinAcceptTask(NULL); 
+    this->component.joinSocketOpenTask(NULL);     
+    }
+  
+  void Tester::test_node(Drv::TcpServerSocket* server, Drv::TcpClientSocket* client){
+    ASSERT_TRUE(server); 
+    ASSERT_TRUE(client); 
+     
+    int basePort = 8080; 
+    int baseID = 0x20202020; 
+    SocketIpStatus status = SOCK_SUCCESS; 
+    SocketIpStatus status1 = SOCK_SUCCESS; 
+    status = this->component.configure("127.0.0.1", basePort, 0, 100); //configure node_0 (this)
+    ASSERT_EQ(status, SOCK_SUCCESS); 
+
+    this->component.setDeviceID(baseID); 
+
+    char hostfile_name[] = "/home/emil/Desktop/VisSidus/Projects/NASA/RPI_Project/fprime/Drv/MultiTcpServer/test/ut/file/test_hostfile_1.txt"; 
+    this->component.setHostFile(hostfile_name, sizeof(hostfile_name)); 
+
+    server->configure("127.0.0.1", 8081, 0, 100); //mock server node
+    server->startup(); 
+
+    client->configure("127.0.0.1", basePort, 0, 100); //mock client node
+
+    //startup, start tasks
+
+    this->component.startup(); 
+
+    Os::TaskString name_acceptTask("AcceptTask"); 
+    this->component.startAcceptTask(name_acceptTask, true, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT);
+    Os::TaskString name_openTask("OpenTask"); 
+    this->component.startSocketOpenTask(name_openTask, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT); 
+
+    //mock server node operations
+    status1 = server->open(); 
+    EXPECT_EQ(status1, SOCK_SUCCESS); 
+
+    Os::Task::delay(10); 
+
+    this->mock_server_swarm_protocol(server, 0x20202025, baseID); //this client to node server
+    
+    status1 = client->open(); 
+    EXPECT_EQ(status1, SOCK_SUCCESS); 
+    this->mock_client_swarm_protocol(client, baseID, 0x20202025); //node client to this server
+    Os::Task::delay(10); 
+
+    //getting here, then asserts passed in the above mock swarm protocol functions
+
+    U8 data[100] = {'I', 'D', 0x20, 0x20, 0x20, 0x20, 'I', 'D', 0x20, 0x20, 0x20, 0x25, 'A', 'B', 'D'}; // from device 0x20202020 to device 0x20202025
+    //node 0 send data to node 1
+    m_data_buffer.setData(data); 
+    m_data_buffer.setSize(sizeof(data)); 
+    m_data_buffer.setContext(0);   
+    
+    this->invoke_to_send(0, m_data_buffer); 
+
+    U8 received_Data[100]; 
+
+    I32 received_size = sizeof(received_Data); 
+    status1 = server->recv(received_Data, received_size); 
+    
+    ASSERT_EQ(status1, SOCK_SUCCESS); 
+    Drv::Test::validate_random_data(received_Data, m_data_buffer.getData(), sizeof(received_Data));
+
+    m_data_buffer.setSize(0); 
+
+    //while(1){}; 
+    //node 1 send data to node 0
+
+    this->component.stopAcceptTask(); 
+    this->component.stopSocketOpenTask(); 
+    Os::Task::delay(10); 
+
+    this->component.joinAcceptTask(NULL); 
+    this->component.joinSocketOpenTask(NULL);    
+
+    server->close(); 
+    client->close();  
+  }
+
   void Tester::generate_device_id(U8* idBuffer){
     int size = sizeof(idBuffer); 
     if(size == 6){
@@ -267,6 +733,7 @@ namespace Drv {
   } 
 
   void Tester::verify_device_id(U8* clientBuffer, U32 serverRecv){
+    ASSERT_TRUE(clientBuffer); 
     int size = sizeof(clientBuffer); 
     if(size == 6){
       ASSERT_EQ(clientBuffer[5], (serverRecv & 0xFF)>>0); 
@@ -274,6 +741,64 @@ namespace Drv {
       ASSERT_EQ(clientBuffer[3], (serverRecv & 0xFF0000)>>16);
       ASSERT_EQ(clientBuffer[2], (serverRecv & 0xFF000000)>>24);
     }
+  }
+  
+  void Tester::mock_server_swarm_protocol(Drv::TcpServerSocket* server, U32 serverID, U32 ClientID){
+    
+    ASSERT_TRUE(server->isOpened()); 
+
+    SocketIpStatus status = SOCK_SUCCESS; 
+
+    //receive client ID, 
+    U8 data[6]; 
+    I32 size = sizeof(data); 
+    U32 ID; 
+
+    status = server->recv(data, size); 
+    ASSERT_EQ(status, SOCK_SUCCESS); 
+
+    ASSERT_EQ(data[0], 'I'); 
+    ASSERT_EQ(data[1], 'D'); 
+    ID = (data[2] << 24) + (data[3] << 16) + (data[4] << 8) + (data[5] << 0); //receive this client id
+
+    ASSERT_EQ(ClientID, ID); 
+
+    data[0] = 'I'; data[1] = 'D'; //package serverID
+    data[2] = (serverID >> 24) & 0xFF; 
+    data[3] = (serverID >> 16) & 0xFF; 
+    data[4] = (serverID >> 8) & 0xFF; 
+    data[5] = (serverID >> 0) & 0xFF; 
+
+    status = server->send(data, sizeof(data)); //send serverID
+    ASSERT_EQ(status, SOCK_SUCCESS); 
+
+  }
+
+  void Tester::mock_client_swarm_protocol(Drv::TcpClientSocket *client, U32 serverID, U32 ClientID){
+    ASSERT_TRUE(client); 
+
+    SocketIpStatus status = SOCK_SUCCESS; 
+
+    //receive client ID, 
+    U8 data[6]; 
+    I32 size = sizeof(data); 
+    U32 ID; 
+
+    data[0] = 'I'; data[1] = 'D'; //package client ID
+    data[2] = (ClientID >> 24) & 0xFF; 
+    data[3] = (ClientID >> 16) & 0xFF; 
+    data[4] = (ClientID >> 8) & 0xFF; 
+    data[5] = (ClientID >> 0) & 0xFF; 
+
+    status = client->send(data, sizeof(data)); //send client ID 
+    ASSERT_EQ(status, SOCK_SUCCESS); 
+
+    status = client->recv(data, size); //receive the server ID
+    
+    ASSERT_EQ(data[0], 'I'); 
+    ASSERT_EQ(data[1], 'D'); 
+    ID = (data[2] << 24) + (data[3] << 16) + (data[4] << 8) + (data[5] << 0); //receive node client id
+    ASSERT_EQ(serverID, ID); 
   }
   // ----------------------------------------------------------------------
   // Handlers for typed from ports
@@ -322,6 +847,7 @@ namespace Drv {
     Drv::Test::validate_random_buffer(m_data_buffer, recvBuffer.getData());
     m_spinner = true;
     delete[] recvBuffer.getData();
+
   }
 
   // ----------------------------------------------------------------------
