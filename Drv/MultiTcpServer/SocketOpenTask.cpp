@@ -50,29 +50,25 @@ namespace Drv{
             if(self->getHostFileEntry(line)){ //get a line
                 //parse line into hostname and port
                 index = sscanf(line, "%[^:]:%i", hostname_s, &port);
-                if(index != 2){
+                if(index != 2){ //scannf did not conver 2 objects
                     continue; 
+                }
+                if(self->getClientSocketManager().checkIfAlreadyConnected(hostname_s, port)){
+                    continue; // Another client is already connected to the host:port
                 }
                 index = self->getClientSocketManager().getFreeSocketIndex(); 
                 if(index >= 0){ //get free socket returned with valid index of an open socket
 
-                    self->getClientSocketManager().getSocketHandler(index).setHost(hostname_s, static_cast<U16>(port)); 
 
+
+                    self->getClientSocketManager().getSocketHandler(index).setHost(hostname_s, static_cast<U16>(port)); 
+                    //fprintf(stderr, "NODE: attempting to open client to %s on %d\n", hostname_s, port); 
                     status = self->getClientSocketManager().getSocketHandler(index).open(); //attempt opening the connection
                     if(status == SOCK_SUCCESS){
+                        //fprintf(stderr, "NODE: Connection opened\n"); 
                         status = self->getClientSocketManager().getSocketHandler(index).sendClientID(self->getDeviceID()); //send clientID
                         if(status == SOCK_SUCCESS){
                             status = self->getClientSocketManager().getSocketHandler(index).recvSrvrID(); //recv serverID
-
-                            //check if another socket is already connected to the Server
-                            for(int i = 0; i < MAX_CLIENTS; i++){
-                                if(index == i){ continue; }
-                                if(self->getClientSocketManager().getSocketHandler(i).getServerDeviceID() == self->getClientSocketManager().getSocketHandler(index).getServerDeviceID()){
-                                    status = SOCK_DISCONNECTED; 
-                                    break; 
-                                }
-                            }
-
                         }
                     }
 

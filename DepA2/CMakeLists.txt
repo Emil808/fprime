@@ -45,6 +45,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/../cmake/FPrime-Code.cmake")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SimplePort/")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SimpleProducer/")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SimpleReceiver/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SwarmDeframer/")
 
 # Add Topology subdirectory
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Top/")

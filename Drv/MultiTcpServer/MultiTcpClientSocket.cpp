@@ -102,4 +102,21 @@ namespace Drv{
         TcpClientSocket::close(); 
         this->serverDeviceID = 0; 
     } 
+
+    bool MultiTcpClientSocket::compareHost(const char* hostname, const U16 port){
+        bool state = true; 
+
+        for(long unsigned int i = 0; i < sizeof(hostname); i++){
+            if(hostname[i] != this->m_hostname[i]){     // Compare IP address
+                state = false;   
+                break;                                  // Found difference, addresses are not the same
+            }
+        }
+
+        if((port != this-> m_port) && state){       //addresses are same, but ports are different
+            state = false; 
+        }
+
+        return state; 
+    }
 }

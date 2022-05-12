@@ -19,7 +19,7 @@ constant CmdDispatcherSequencePorts = 5
 constant GenericRepeaterOutputPorts = 2
 
 @ Number of static memory allocations
-constant StaticMemoryAllocations = 4
+constant StaticMemoryAllocations = 8
 
 @ Used to ping active components
 constant HealthPingPorts = 25

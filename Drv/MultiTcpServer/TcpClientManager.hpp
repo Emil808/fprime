@@ -28,6 +28,7 @@ namespace Drv{
             Drv::MultiTcpClientSocket& getSocketHandlerByID(U32 device_id); 
 
             bool checkIfAlreadyConnected(U32 device_id); 
+            bool checkIfAlreadyConnected(const char* hostname, const U16 port); 
 
         private:
             U32 m_timeoutSeconds;               // Ip Socket timeout, seconds

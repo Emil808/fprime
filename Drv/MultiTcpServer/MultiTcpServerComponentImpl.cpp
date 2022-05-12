@@ -5,6 +5,7 @@
 #include <Fw/Logger/Logger.hpp>
 #include <stdio.h>
 #include <inttypes.h>
+#include <cerrno> 
 namespace Drv{
     
     // ----------------------------------------------------------------------
@@ -40,6 +41,9 @@ namespace Drv{
     }
 
     Fw::Buffer MultiTcpServerComponentImpl::getBuffer(){
+
+        //todo: handle failed allocate_out from Buffer Manager
+        //should it be at this level? or at the Task level? 
         return allocate_out(0, 1024); 
     }
 
@@ -55,7 +59,6 @@ namespace Drv{
         // {} - Data from component.
         // if using ID protocol
 
-        
         U32 index = 0; 
         U32 receiverID = 0; 
         //char ID_string[5] = {0};
@@ -72,11 +75,13 @@ namespace Drv{
                         //ID_string[0] = data[i+2]; ID_string[1] = data[i+3]; ID_string[2] = data[i+4]; ID_string[3] = data[i+5]; 
                         //receiverID = strtoumax(ID_string, NULL, 10); 
                         receiverID = (data[i+2] << 24) + (data[i+3] << 16) + (data[i+4] << 8) + (data[i+5] << 0); 
+                        index = i; 
                         break; 
                     }
                 }
             }
             if(data[index] != 'I' && data[index+1] != 'D'){ // Id Protocol header incorrect
+                deallocate_out(0, fwBuffer); 
                 return SendStatus::SEND_ERROR; 
             }        
         }
@@ -105,6 +110,7 @@ namespace Drv{
             }
             return SendStatus::SEND_OK; 
         }
+        
     }
 
     Drv::PollStatus MultiTcpServerComponentImpl::poll_handler(const NATIVE_INT_TYPE portNum, Fw::Buffer& fwBuffer){
@@ -166,7 +172,19 @@ namespace Drv{
         if(fscanf(fp, "%25s", line) > 0){
             valid = true; 
         }
+
+        if(line[0] == 0x00){ //reached EOF
+            valid = false; 
+            rewind(fp); 
+            
+        
+            if(fscanf(fp, "%25s", line) > 0){
+                valid = true; 
+            }
+        }
         (void) Fw::StringUtils::string_copy(entry, line, 25+1); 
+
+        //fprintf(stderr, "Processing line %s\n", entry); 
           // fclose(fp); 
         
         return valid; 

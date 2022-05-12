@@ -174,7 +174,6 @@ module DepA2 {
         stack size Default.stackSize \ 
         priority 100
 
-
     # ----------------------------------------------------------------------
     # Queued component instances
     # ----------------------------------------------------------------------
@@ -352,11 +351,11 @@ module DepA2 {
     instance hub: Svc.GenericHub base id 0x4C00
 
     instance commP: Drv.ByteStreamDriverModel base id 0x5000 \
-    at "../../Drv/TcpServer/TcpServer.hpp" \
+    at "../../Drv/MultiTcpServer/MultiTcpServer.hpp" \
     {
 
     phase Fpp.ToCpp.Phases.instances """
-    Drv::TcpServer commP(FW_OPTIONAL_NAME("commP"));
+    Drv::MultiTcpServer commP(FW_OPTIONAL_NAME("commP"));
     """
 
     phase Fpp.ToCpp.Phases.configConstants """
@@ -368,26 +367,32 @@ module DepA2 {
 
     phase Fpp.ToCpp.Phases.startTasks """
     // Initialize socket server if and only if there is a valid specification
-    const char * hostNameP = "0.0.0.0"; 
-    U32 portNumberP = 50020; 
+    const char * hostNameP = "127.0.1.2"; 
+    U32 portNumberP = 50110; 
+    char hostfile_name[] = "node_hostfile_0.txt"; 
     if (hostNameP != nullptr && portNumberP != 0) {
-        Os::TaskString name("ReceiveTaskP");
-        // Uplink is configured for receive so a socket task is started
-        commP.configure(hostNameP, portNumberP);
-        commP.startup(); 
-        commP.startSocketTask(
-            name,
-            true,
-            ConfigConstants::commP::PRIORITY,
-            ConfigConstants::commP::STACK_SIZE
-        );
+      
+        Os::TaskString name("commP.Accept");
+        commP.configure(hostNameP, portNumberP); 
+        commP.setDeviceID(0x20202022); 
+        commP.setHostFile(hostfile_name, sizeof(hostfile_name));
+        commP.startup(); //todo check that startup starts correctly? 
+
+        commP.startAcceptTask(name, true, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT); 
+        
+        name = "commP.Open"; 
+        commP.startSocketOpenTask(name, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT);
+        
+        
     }
     """
 
     phase Fpp.ToCpp.Phases.freeThreads """
     commP.shutdown(); 
-    commP.stopSocketTask();
-    (void) commP.joinSocketTask(nullptr);
+    commP.stopAcceptTask();
+    commP.stopSocketOpenTask(); 
+    (void) commP.joinAcceptTask(nullptr);
+    (void) commP.joinSocketOpenTask(nullptr); 
     """
 
     }
@@ -400,6 +405,7 @@ module DepA2 {
 
         phase Fpp.ToCpp.Phases.configComponents """
         uplinkP.setup(ConfigObjects::uplinkP::deframing);
+        
         """
 
     }
@@ -409,5 +415,31 @@ module DepA2 {
     queue size 30 \
     stack size Default.stackSize \
     priority 100
+    
+    instance swarmDeframer: DepA2.SwarmDeframer base id 0x5400
+
+    instance dynamicMemory: Svc.BufferManager base id 0x5300 \
+    {
+    phase Fpp.ToCpp.Phases.instances """
+        Svc::BufferManager dynamicMemory(FW_OPTIONAL_NAME("dynamicMemory"));
+    """
+    phase Fpp.ToCpp.Phases.configComponents"""
+        
+        
+        Svc::BufferManagerComponentImpl::BufferBins bins;
+        memset(&bins,0,sizeof(bins));
+        bins.bins[0].bufferSize = 1024; 
+        bins.bins[0].numBuffers = 5; 
+        
+        static Fw::MallocAllocator allocator; 
+        dynamicMemory.setup(0x5300, 0x50, allocator ,bins);
+
+    """
+
+    phase Fpp.ToCpp.Phases.tearDownComponents """
+        dynamicMemory.cleanup(); 
+    """
+    }
+
 
 }

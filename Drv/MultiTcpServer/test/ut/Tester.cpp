@@ -658,7 +658,9 @@ namespace Drv {
 
     this->component.setDeviceID(baseID); 
 
-    char hostfile_name[] = "/home/emil/Desktop/VisSidus/Projects/NASA/RPI_Project/fprime/Drv/MultiTcpServer/test/ut/file/test_hostfile_1.txt"; 
+    //NOTE: File fprime-util check relative to the build cache in:
+    // build-fprime-automatic-native-ut/F-Prime/Drv/MultiTcpServer/<location of Tester.cpp that check uses> 
+    char hostfile_name[] = "../../../../Drv/MultiTcpServer/test/ut/file/test_hostfile_1.txt"; 
     this->component.setHostFile(hostfile_name, sizeof(hostfile_name)); 
 
     server->configure("127.0.0.1", 8081, 0, 100); //mock server node
@@ -708,9 +710,6 @@ namespace Drv {
 
     m_data_buffer.setSize(0); 
 
-    //while(1){}; 
-    //node 1 send data to node 0
-
     this->component.stopAcceptTask(); 
     this->component.stopSocketOpenTask(); 
     Os::Task::delay(10); 
@@ -720,8 +719,110 @@ namespace Drv {
 
     server->close(); 
     client->close();  
+    this->component.shutdown(); 
   }
 
+  void Tester::test_mesh(Drv::TcpServerSocket* mock_server, Drv::TcpClientSocket* mock_client, U32 n, const char* hostfile_name){
+   
+    //validate inputs
+    ASSERT_TRUE(mock_server);
+    ASSERT_TRUE(mock_client); 
+    ASSERT_GT(n, 0); 
+    ASSERT_TRUE(hostfile_name); 
+
+    int basePort = 8080; 
+    int baseID = 0x20202020; 
+  
+    SocketIpStatus status1 = SOCK_SUCCESS; 
+
+    status1 = this->component.configure("127.0.0.1", basePort, 0, 100); 
+    ASSERT_EQ(status1, SOCK_SUCCESS); 
+    this->component.setDeviceID(baseID); 
+    
+    //char hostfile_name[] = "test/ut/file/test_hostfile_2.txt";
+    
+    this->component.setHostFile(hostfile_name, sizeof(hostfile_name)); 
+    
+    status1 = this->component.startup(); 
+
+    ASSERT_EQ(status1, SOCK_SUCCESS); 
+
+    for(U32 i = 1; i <= n; i++){ 
+      fprintf(stderr, "configuring server at port: %d\n", basePort+i);
+      mock_server[i-1].configure("127.0.0.1", basePort+i, 0, 100); 
+      status1 = mock_server[i-1].startup(); 
+      ASSERT_EQ(status1, SOCK_SUCCESS); 
+
+      mock_client[i-1].configure("127.0.0.1", basePort, 0, 100);
+    }
+
+    Os::TaskString name_acceptTask("AcceptTask"); 
+    this->component.startAcceptTask(name_acceptTask, true, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT);
+    Os::TaskString name_openTask("OpenTask"); 
+    this->component.startSocketOpenTask(name_openTask, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT); 
+
+    Os::Task::delay(10); 
+     fprintf(stderr, "START\n"); 
+    // swarm connection
+    for(U32 i = 1; i <= n; i++){ 
+      fprintf(stderr, "opening server at port: %d\n", basePort+i); 
+      mock_server[i-1].open(); 
+      Os::Task::delay(10); 
+      this->mock_server_swarm_protocol(&mock_server[i-1], baseID+i, baseID); 
+      fprintf(stderr, "Mock Server %d opened, %d\n", i-1, basePort+i); 
+
+      mock_client[i-1].open(); 
+      Os::Task::delay(10); 
+      this->mock_client_swarm_protocol(&mock_client[i-1], baseID, baseID+i); 
+      fprintf(stderr, "Mock Client %d opened\n", i-1); 
+    }
+
+    //this node sending data
+    U8 data[100] = {'I', 'D', 0x20, 0x20, 0x20, 0x20, 'I', 'D', 0x20, 0x20, 0x20, 0x20, 'A', 'B', 'D'}; 
+    U8 received_Data[100]; 
+    I32 received_Size = sizeof(received_Data); 
+    //index 11: LSB of destination ID
+    for(U32 i = 1; i <=n; i++){
+      fprintf(stderr, "Checking Node to mock %d\n", i); 
+      data[11] = 0x20 + i; 
+      m_data_buffer.setData(data); 
+      m_data_buffer.setSize(sizeof(data)); 
+      m_data_buffer.setContext(0); 
+
+      this->invoke_to_send(0, m_data_buffer); 
+
+      status1 = mock_server[i-1].recv(received_Data, received_Size); 
+
+      ASSERT_EQ(status1, SOCK_SUCCESS); 
+      Drv::Test::validate_random_data(received_Data, m_data_buffer.getData(), sizeof(received_Data));
+
+      m_data_buffer.setSize(0); 
+    }
+
+
+    //this node receiving data
+    data[11] = 0x20; 
+    for(U32 i = 1; i <= n; i++){
+      data[5] = 0x20 + i; 
+      m_data_buffer.setData(data); 
+      m_data_buffer.setSize(sizeof(data)); 
+
+      status1 = mock_client[i-1].send(m_data_buffer.getData(), m_data_buffer.getSize()); 
+      Os::Task::delay(10); 
+    }
+
+    for(U32 i = 1; i <= n; i++){
+      mock_client[i-1].close(); 
+      mock_server[i-1].close(); 
+    }
+
+    this->component.stopAcceptTask(); 
+    this->component.stopSocketOpenTask(); 
+
+    this->component.joinAcceptTask(NULL); 
+    this->component.joinSocketOpenTask(NULL);
+
+  }
   void Tester::generate_device_id(U8* idBuffer){
     int size = sizeof(idBuffer); 
     if(size == 6){

@@ -120,13 +120,30 @@ TEST(Nominal, max_connections_0){
 //     tester.test_setup();
 // }
 
-TEST(Nominal, test_mesh_2){
-    Drv::Tester tester;
+// TEST(Nominal, test_mesh_2){
+//     Drv::Tester tester;
 
-    Drv::TcpClientSocket node_client; 
-    Drv::TcpServerSocket node_server; 
-    tester.test_node(&node_server, &node_client); 
+//     Drv::TcpClientSocket node_client; 
+//     Drv::TcpServerSocket node_server; 
+//     tester.test_node(&node_server, &node_client); 
     
+// }
+
+// TEST(Nominal, test_mesh_3){
+//     Drv::Tester tester;
+//     Drv::TcpClientSocket mock_client[2]; 
+//     Drv::TcpServerSocket mock_server[2]; 
+//     char hostfile_name[] = "../../../../Drv/MultiTcpServer/test/ut/file/test_hostfile_2.txt";
+//     tester.test_mesh(mock_server, mock_client, 2, hostfile_name); 
+// }
+
+TEST(Nominal, test_mesh_5){
+   
+    Drv::Tester tester; 
+    Drv::TcpClientSocket mock_client[4]; 
+    Drv::TcpServerSocket mock_server[4]; 
+    char hostfile_name[] = "../../../../Drv/MultiTcpServer/test/ut/file/test_hostfile_4.txt";
+    tester.test_mesh(mock_server, mock_client, 4, hostfile_name); 
 }
 int main(int argc, char** argv){
     ::testing::InitGoogleTest(&argc, argv); 

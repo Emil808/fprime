@@ -57,7 +57,7 @@ namespace DepA2 {
     // TODO
     this->tlmWrite_VAL(val1); 
     this->log_ACTIVITY_LO_COMMAND_RECV(val1); 
-    //this->valOut_out(0, val1); 
+    this->valOut_out(0, val1); 
     this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
   }
 

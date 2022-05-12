@@ -12,6 +12,7 @@ module DepA{
         hub
         downlinkP
         commP
+        swarmFramer
     }
 
     topology DepA{
@@ -50,6 +51,9 @@ module DepA{
         instance commP
         instance SimpleProducer
         instance fileDownlinkP
+
+        instance dynamicMemory
+        instance swarmFramer
 
         # ------------------------------
         # pattern graph specifiers
@@ -130,18 +134,22 @@ module DepA{
         }
 
         connections hub{
-            SimpleProducer.valOut -> hub.portIn[0]
+            SimpleProducer.valOut -> swarmFramer.portIn
+
+            swarmFramer.framedAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.swarmFramer]
             
-            hub.bufferDeallocate -> fileDownlinkP.bufferReturn
-            fileDownlinkP.bufferSendOut -> hub.buffersIn 
+            swarmFramer.framedOut -> hub.buffersIn[1]
+            hub.bufferDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.swarmFramer]
 
             hub.dataOutAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.hub]
             hub.dataOut -> downlinkP.bufferIn
-            downlinkP.bufferDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub]
+            downlinkP.bufferDeallocate ->staticMemory.bufferDeallocate[Ports_StaticMemory.hub]
 
             downlinkP.framedAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.downlinkP]
             downlinkP.framedOut -> commP.send
             commP.deallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.downlinkP]
+
+            commP.allocate -> dynamicMemory.bufferGetCallee
             
 
         }

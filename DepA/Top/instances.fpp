@@ -353,11 +353,11 @@ module DepA {
     instance hub: Svc.GenericHub base id 0x4C00
 
     instance commP: Drv.ByteStreamDriverModel base id 0x5000 \
-    at "../../Drv/TcpClient/TcpClient.hpp" \
+    at "../../Drv/MultiTcpServer/MultiTcpServer.hpp" \
     {
 
     phase Fpp.ToCpp.Phases.instances """
-    Drv::TcpClient commP(FW_OPTIONAL_NAME("commP"));
+    Drv::MultiTcpServer commP(FW_OPTIONAL_NAME("commP"));
     """
 
     phase Fpp.ToCpp.Phases.configConstants """
@@ -369,18 +369,30 @@ module DepA {
 
     phase Fpp.ToCpp.Phases.startTasks """
     // Initialize socket server if and only if there is a valid specification
-    const char * hostNameP = "0.0.0.0"; 
-    U32 portNumberP = 50020; 
+    const char * hostNameP = "127.0.1.1"; 
+    U32 portNumberP = 50100; 
+    char hostfile_name[] = "node_hostfile_0.txt"; 
     if (hostNameP != nullptr && portNumberP != 0) {
-        Os::TaskString name("ReceiveTaskP");
-        // Uplink is configured for receive so a socket task is started
+        Os::TaskString name("commP.Accept");
         commP.configure(hostNameP, portNumberP); 
-        commP.open(); 
+        commP.setDeviceID(0x20202020); 
+        commP.setHostFile(hostfile_name, sizeof(hostfile_name));
+        commP.startup(); //todo check that startup starts correctly? 
+
+        commP.startAcceptTask(name, true, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT); 
+        
+        name = "commP.Open"; 
+        commP.startSocketOpenTask(name, true, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT, Os::Task::TASK_DEFAULT);
+        
     }
     """
 
     phase Fpp.ToCpp.Phases.freeThreads """
-    commP.close(); 
+    commP.shutdown(); 
+    commP.stopAcceptTask();
+    commP.stopSocketOpenTask(); 
+    (void) commP.joinAcceptTask(nullptr);
+    (void) commP.joinSocketOpenTask(nullptr); 
     """
 
     }
@@ -421,6 +433,36 @@ module DepA {
     );
     """
 
+    }
+
+    instance dynamicMemory: Svc.BufferManager base id 0x5300 \
+    {
+
+    phase Fpp.ToCpp.Phases.instances"""
+        Svc::BufferManager dynamicMemory(FW_OPTIONAL_NAME("dynamicMemory"));
+    """
+    phase Fpp.ToCpp.Phases.configComponents"""
+       
+        Svc::BufferManagerComponentImpl::BufferBins bins;
+        memset(&bins,0,sizeof(bins));
+        bins.bins[0].bufferSize = 1024; 
+        bins.bins[0].numBuffers = 5; 
+        
+        static Fw::MallocAllocator allocator; 
+        dynamicMemory.setup(0x5300, 0x50, allocator ,bins);
+    """
+
+    phase Fpp.ToCpp.Phases.tearDownComponents """
+        dynamicMemory.cleanup(); 
+    """
+    }
+
+    instance swarmFramer: DepA.SwarmFramer base id 0x5400 \
+    {
+        phase Fpp.ToCpp.Phases.configComponents """
+        swarmFramer.setSourceId(0x20202020); 
+
+        """
     }
 
 }

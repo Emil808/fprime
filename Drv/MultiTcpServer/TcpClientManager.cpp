@@ -89,4 +89,18 @@ namespace Drv{
         }
         return false; 
     }
+
+    bool TcpClientManager::checkIfAlreadyConnected(const char* hostname, const U16 port){
+        bool state = false; 
+
+        for(int i = 0; i < MAX_CLIENTS; i++){
+            if(this->sockets[i].isOpened() && this->sockets[i].compareHost(hostname, port)){ 
+                //a port is opened, and is connected to the host in question
+                state = true; 
+                break; 
+            }
+            
+        }
+        return state; 
+    }
 }

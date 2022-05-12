@@ -11,6 +11,8 @@ module DepA2{
         uplink 
         uplinkP
         hub
+        commP
+        swarmDeframer
     }
 
     topology DepA2{
@@ -50,6 +52,10 @@ module DepA2{
         instance SimpleReceiver
         instance uplinkP
         instance fileUplinkP
+
+        instance dynamicMemory
+        instance swarmDeframer
+
         # ------------------------------
         # pattern graph specifiers
         # ------------------------------
@@ -111,6 +117,7 @@ module DepA2{
             linuxTimer.CycleOut -> rateGroupDriverComp.CycleIn
             # Rate group 1
             rateGroupDriverComp.CycleOut[Ports_RateGroups.rateGroup1] -> rateGroup1Comp.CycleIn
+           
             rateGroup1Comp.RateGroupMemberOut[2] -> chanTlm.Run
             rateGroup1Comp.RateGroupMemberOut[3] -> fileDownlink.Run
             rateGroup1Comp.RateGroupMemberOut[4] -> systemResources.run
@@ -128,17 +135,26 @@ module DepA2{
         }
 
         connections HubUplink{
-            commP.allocate -> staticMemory.bufferAllocate[Ports_StaticMemory.uplinkP]
+            commP.allocate -> dynamicMemory.bufferGetCallee
             commP.$recv -> uplinkP.framedIn
-            uplinkP.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.uplinkP]
+            uplinkP.framedDeallocate -> dynamicMemory.bufferSendIn
 
-            uplinkP.bufferAllocate -> fileUplinkBufferManager.bufferGetCallee
-            hub.buffersOut -> fileUplinkP.bufferSendIn
-            fileUplinkP.bufferSendOut -> fileUplinkBufferManager.bufferSendIn
-            hub.dataInDeallocate -> fileUplinkBufferManager.bufferSendIn            
-            
+            uplinkP.bufferAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.hub]
             uplinkP.bufferOut -> hub.dataIn
-            hub.portOut[0] -> SimpleReceiver.valIn
+
+            # for buffer -> hub -> port
+            hub.dataInDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub] 
+
+            hub.buffersOut[1] -> swarmDeframer.framedIn
+
+            
+            swarmDeframer.bufferAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.swarmDeframer]
+            swarmDeframer.bufferDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.swarmDeframer]
+            
+            # for buffer -> hub -> buffer
+            swarmDeframer.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub] 
+
+            swarmDeframer.portOut -> SimpleReceiver.valIn
         }
     }
 }

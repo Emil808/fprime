@@ -21,6 +21,8 @@ namespace Drv{
 
             U32 getServerDeviceID(); 
             void close(); 
+
+            bool compareHost(const char* hostname, const U16 port);  
         private: 
             U32 m_timeoutSeconds;               // Ip Socket timeout, seconds
             U32 m_timeoutMicroseconds;          // Ip Socket timeout, microseconds

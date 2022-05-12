@@ -69,6 +69,8 @@ namespace Drv {
       void test_setup(); 
 
       void test_node(Drv::TcpServerSocket* server, Drv::TcpClientSocket* client); 
+
+      void test_mesh(Drv::TcpServerSocket* mock_server, Drv::TcpClientSocket* mock_client, U32 n, const char* hostfile_name); 
       
       // ----------------------------------------------------------------------
       // Helpers

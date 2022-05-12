@@ -9,7 +9,7 @@ namespace Drv{
         public: 
 
             SocketOpenTask(); 
-            ~SocketOpenTask(); 
+            virtual ~SocketOpenTask(); 
 
             void startSocketOpenTask(const Fw::StringBase &name,
                          const bool reconnect = true,

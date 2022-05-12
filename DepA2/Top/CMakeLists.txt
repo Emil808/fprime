@@ -17,6 +17,8 @@ set(MOD_DEPS
   Drv/Udp
   Drv/TcpClient
   Drv/TcpServer
+  Drv/MultiTcpServer
+  Svc/BufferManager
 )
 
 register_fprime_module()

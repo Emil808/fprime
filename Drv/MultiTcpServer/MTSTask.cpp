@@ -106,7 +106,7 @@ namespace Drv{
                     
                     clientFd = -1; 
                      
-                    Fw::Logger::logMsg("Failed to accept client with status %d and errno d\n", status, errno); 
+                    //Fw::Logger::logMsg("Failed to accept client with status %d and errno d\n", status, errno); 
                     Os::Task::delay(SOCKET_RETRY_INTERVAL_MS); //delay present in original socket read task 
                 }
                 
@@ -190,7 +190,10 @@ namespace Drv{
 
             //Read from network connection
             if(self->getSocketManager().getSocketHandler(index).isOpened() and (not self->m_stop)){
-                Fw::Buffer buffer = self->getBuffer(); //todo handle failed getBuffer from bufferManager
+                Fw::Buffer buffer = self->getBuffer(); //todo: handle failed getBuffer from bufferManager
+                if(buffer.getSize() == 0){ // getBuffer returned with size of 0, skip loop and try again. 
+                    continue; 
+                }
                 U8* data = buffer.getData(); 
                 FW_ASSERT(data); 
 
@@ -203,9 +206,9 @@ namespace Drv{
                 status = self->getSocketManager().getSocketHandler(index).recv(data, size); 
 
                 if ((status != SOCK_SUCCESS) && (status != SOCK_INTERRUPTED_TRY_AGAIN)) {
-                Fw::Logger::logMsg("[WARNING] Failed to recv from port with status %d and errno %d\n", status, errno);
-                self->getSocketManager().getSocketHandler(index).close();
-                buffer.setSize(0);
+                    Fw::Logger::logMsg("[WARNING] Failed to recv from port with status %d and errno %d\n", status, errno);
+                    self->getSocketManager().getSocketHandler(index).close();
+                    buffer.setSize(0);
                 } else {
                     // Send out received data
                     buffer.setSize(size);
