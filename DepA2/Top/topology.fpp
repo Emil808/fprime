@@ -9,9 +9,11 @@ module DepA2{
     enum Ports_StaticMemory{
         downlink 
         uplink 
-        uplinkP
+        downlinkP
         hub
+        hub2
         commP
+        swarmFramer
         swarmDeframer
     }
 
@@ -31,7 +33,7 @@ module DepA2{
         instance rateGroup2Comp
         instance rateGroup3Comp
         instance rateGroupDriverComp
-        # instance SimpleProducer
+        instance SimpleProducer
         instance comm
         instance downlink
         instance fatalAdapter
@@ -55,6 +57,9 @@ module DepA2{
 
         instance dynamicMemory
         instance swarmDeframer
+
+        instance swarmFramer
+        instance downlinkP
 
         # ------------------------------
         # pattern graph specifiers
@@ -155,6 +160,22 @@ module DepA2{
             swarmDeframer.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub] 
 
             swarmDeframer.portOut -> SimpleReceiver.valIn
+        }
+
+        connections HubDownlink{
+            SimpleProducer.valOut -> swarmFramer.portIn
+            swarmFramer.framedAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.swarmFramer]
+            
+            swarmFramer.framedOut -> hub.buffersIn[1]
+            hub.bufferDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.swarmFramer]
+
+            hub.dataOutAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.hub]
+            hub.dataOut -> downlinkP.bufferIn
+            downlinkP.bufferDeallocate ->staticMemory.bufferDeallocate[Ports_StaticMemory.hub]
+
+            downlinkP.framedAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.downlinkP]
+            downlinkP.framedOut -> commP.send
+            commP.deallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.downlinkP]
         }
     }
 }

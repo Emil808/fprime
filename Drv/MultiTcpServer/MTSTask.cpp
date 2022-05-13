@@ -97,7 +97,7 @@ namespace Drv{
             //Fw::Logger::logMsg("[INFO] task count = %d\nMax Task = %d\n", self->taskCount, MAX_TASKS);
             //Fw::Logger::logMsg("[INFO] not self->taskCount == MAX_TASKS result = %d\n", not (self->taskCount == MAX_TASKS)); 
             if(not (self->taskCount == MAX_TASKS) && self->getSocketManager().getNConnected() < MAX_CLIENTS){ //not yet reached maximum clients
-                Fw::Logger::logMsg("[INFO] Attempting to accept\n");
+                //Fw::Logger::logMsg("[INFO] Attempting to accept\n");
                  
                 status = self->getSocketManager().open(clientFd); //accept a client
                 

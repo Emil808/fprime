@@ -10,9 +10,11 @@ module DepA{
         downlink 
         uplink 
         hub
+        hub2
         downlinkP
         commP
         swarmFramer
+        swarmDeframer
     }
 
     topology DepA{
@@ -54,6 +56,10 @@ module DepA{
 
         instance dynamicMemory
         instance swarmFramer
+
+        instance swarmDeframer
+        instance SimpleReceiver
+        instance uplinkP
 
         # ------------------------------
         # pattern graph specifiers
@@ -133,7 +139,7 @@ module DepA{
 
         }
 
-        connections hub{
+        connections hubDownlink{
             SimpleProducer.valOut -> swarmFramer.portIn
 
             swarmFramer.framedAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.swarmFramer]
@@ -148,10 +154,30 @@ module DepA{
             downlinkP.framedAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.downlinkP]
             downlinkP.framedOut -> commP.send
             commP.deallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.downlinkP]
-
-            commP.allocate -> dynamicMemory.bufferGetCallee
             
-
         }
+        connections hubUplink{
+            commP.allocate -> dynamicMemory.bufferGetCallee
+            commP.$recv -> uplinkP.framedIn
+            uplinkP.framedDeallocate -> dynamicMemory.bufferSendIn
+
+            uplinkP.bufferAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.hub2]
+            uplinkP.bufferOut -> hub.dataIn
+
+            # for buffer -> hub -> port
+            hub.dataInDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub2] 
+
+            hub.buffersOut[1] -> swarmDeframer.framedIn
+
+            
+            swarmDeframer.bufferAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.swarmDeframer]
+            swarmDeframer.bufferDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.swarmDeframer]
+            
+            # for buffer -> hub -> buffer
+            swarmDeframer.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub2] 
+
+            swarmDeframer.portOut -> SimpleReceiver.valIn
+        }
+
     }
 }

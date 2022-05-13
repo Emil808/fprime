@@ -440,6 +440,24 @@ module DepA2 {
         dynamicMemory.cleanup(); 
     """
     }
+    
+    instance downlinkP: Svc.Framer base id 0x5500 {
 
+        phase Fpp.ToCpp.Phases.configObjects """
+        Svc::FprimeFraming framing;
+        """
 
+        phase Fpp.ToCpp.Phases.configComponents """
+        downlinkP.setup(ConfigObjects::downlinkP::framing);
+        """
+
+    }
+
+    instance swarmFramer: DepA2.SwarmFramer base id 0x5600 \
+    {
+        phase Fpp.ToCpp.Phases.configComponents """
+        swarmFramer.setSourceId(0x20202020); 
+
+        """
+    }
 }

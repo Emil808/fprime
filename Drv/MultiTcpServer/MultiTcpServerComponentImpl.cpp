@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include <cerrno> 
+
+#include <sys/signal.h> 
 namespace Drv{
     
     // ----------------------------------------------------------------------
@@ -87,15 +89,27 @@ namespace Drv{
         }
         Drv::SocketIpStatus status;
         if(receiverID != 808464432){    // receiverID is not 808464432, send to a specific connection
-            status = m_CManager.getSocketHandlerByID(receiverID).send(fwBuffer.getData(), fwBuffer.getSize()); 
-            deallocate_out(0, fwBuffer); 
 
-            if ((status == SOCK_DISCONNECTED) || (status == SOCK_INTERRUPTED_TRY_AGAIN)) {
-            return SendStatus::SEND_RETRY;
-            } else if (status != SOCK_SUCCESS) {
+            if(m_CManager.checkIfAlreadyConnected(receiverID)){
+                
+                status = m_CManager.getSocketHandlerByID(receiverID).send(fwBuffer.getData(), fwBuffer.getSize()); //if the other side disconnected, this will cause a sigpipe                
+                deallocate_out(0, fwBuffer); 
+
+                if ((status == SOCK_DISCONNECTED) || (status == SOCK_INTERRUPTED_TRY_AGAIN)) {
+                return SendStatus::SEND_RETRY;
+                } else if (status != SOCK_SUCCESS) {
+
+                    if(errno == EPIPE){
+                        m_CManager.getSocketHandlerByID(receiverID).close(); 
+                    }
+                    return SendStatus::SEND_ERROR;
+                }
+                return SendStatus::SEND_OK;
+            }
+            else{
+                deallocate_out(0, fwBuffer);
                 return SendStatus::SEND_ERROR;
             }
-            return SendStatus::SEND_OK;
         }
         else{ // receiverID is 808464432, send Broadcast
 

@@ -438,11 +438,12 @@ module DepA {
     instance dynamicMemory: Svc.BufferManager base id 0x5300 \
     {
 
-    phase Fpp.ToCpp.Phases.instances"""
+    phase Fpp.ToCpp.Phases.instances """
         Svc::BufferManager dynamicMemory(FW_OPTIONAL_NAME("dynamicMemory"));
     """
     phase Fpp.ToCpp.Phases.configComponents"""
-       
+        
+        
         Svc::BufferManagerComponentImpl::BufferBins bins;
         memset(&bins,0,sizeof(bins));
         bins.bins[0].bufferSize = 1024; 
@@ -450,6 +451,7 @@ module DepA {
         
         static Fw::MallocAllocator allocator; 
         dynamicMemory.setup(0x5300, 0x50, allocator ,bins);
+        
     """
 
     phase Fpp.ToCpp.Phases.tearDownComponents """
@@ -465,4 +467,20 @@ module DepA {
         """
     }
 
+    instance SimpleReceiver: DepA.SimpleReceiver base id 0x4D00 
+
+    instance swarmDeframer: DepA.SwarmDeframer base id 0x5500 
+
+    instance uplinkP: Svc.Deframer base id 0x5600 {
+
+        phase Fpp.ToCpp.Phases.configObjects """
+        Svc::FprimeDeframing deframing;
+        """
+
+        phase Fpp.ToCpp.Phases.configComponents """
+        uplinkP.setup(ConfigObjects::uplinkP::deframing);
+        
+        """
+
+    }
 }

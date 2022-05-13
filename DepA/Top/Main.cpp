@@ -27,9 +27,10 @@ int main(int argc, char* argv[]) {
     U32 port_number = 0; // Invalid port number forced
     I32 option;
     char *hostname;
+    U32 devID; 
     option = 0;
     hostname = nullptr;
-    while ((option = getopt(argc, argv, "hp:a:")) != -1){
+    while ((option = getopt(argc, argv, "hp:a:d:")) != -1){
         switch(option) {
             case 'h':
                 print_usage(argv[0]);
@@ -42,6 +43,9 @@ int main(int argc, char* argv[]) {
                 hostname = optarg;
                 
                 break;
+            case 'd':
+                devID = static_cast<U32>(atoi(optarg)); 
+                break; 
             case '?':
                 return 1;
             default:
@@ -53,7 +57,7 @@ int main(int argc, char* argv[]) {
 
     (void) printf("Hit Ctrl-C to quit\n");
 
-    state = DepA::TopologyState(hostname, port_number);
+    state = DepA::TopologyState(hostname, port_number, devID);
     DepA::setup(state);
 
     // register signal handlers to exit program
