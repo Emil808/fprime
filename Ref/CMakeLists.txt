@@ -45,7 +45,7 @@ add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SendBuffApp/")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SignalGen/")
 
 # Emil's added component subdirectories
-add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/simplePort/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SimplePort/")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SimpleProducer/")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SimpleReceiver/")
 

@@ -1,0 +1,298 @@
+{
+  "columns" : [
+    [
+      {
+        "instanceName" : "SimpleProducer",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "valOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "swarmFramer",
+        "inputPorts" : [
+          {
+            "name" : "portIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "framedAllocate",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "framedOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "hub",
+        "inputPorts" : [
+          {
+            "name" : "buffersIn",
+            "portNumbers" : [
+              1
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "bufferDeallocate",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "dataOut",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "dataOutAllocate",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "downlinkP",
+        "inputPorts" : [
+          {
+            "name" : "bufferIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "bufferDeallocate",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "framedAllocate",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "framedOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "commP",
+        "inputPorts" : [
+          {
+            "name" : "send",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "deallocate",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "staticMemory",
+        "inputPorts" : [
+          {
+            "name" : "bufferDeallocate",
+            "portNumbers" : [
+              2,
+              4,
+              6
+            ]
+          },
+          {
+            "name" : "bufferAllocate",
+            "portNumbers" : [
+              2,
+              4,
+              6
+            ]
+          }
+        ],
+        "outputPorts" : []
+      }
+    ]
+  ],
+  "connections" : [
+    [
+      [
+        1,
+        0,
+        1,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        1
+      ]
+    ],
+    [
+      [
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        5,
+        0,
+        1,
+        6
+      ]
+    ],
+    [
+      [
+        3,
+        0,
+        2,
+        0
+      ],
+      [
+        4,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        5,
+        0,
+        0,
+        6
+      ]
+    ],
+    [
+      [
+        2,
+        0,
+        1,
+        0
+      ],
+      [
+        3,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        3,
+        0,
+        0,
+        0
+      ],
+      [
+        5,
+        0,
+        0,
+        2
+      ]
+    ],
+    [
+      [
+        3,
+        0,
+        1,
+        0
+      ],
+      [
+        5,
+        0,
+        1,
+        4
+      ]
+    ],
+    [
+      [
+        4,
+        0,
+        0,
+        0
+      ],
+      [
+        5,
+        0,
+        0,
+        4
+      ]
+    ],
+    [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2,
+        0,
+        2,
+        0
+      ],
+      [
+        5,
+        0,
+        1,
+        2
+      ]
+    ]
+  ]
+}

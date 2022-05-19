@@ -7,7 +7,7 @@ module Ref{
     # ----------------------------------------------------------------------
 
     @ Port for receiving value from SimpleProducer
-    sync input port valIn: simplePort 
+    sync input port valIn: SimplePort 
 
     # ----------------------------------------------------------------------
     # Special ports

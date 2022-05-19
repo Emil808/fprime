@@ -1,0 +1,38 @@
+<fpl>
+  <connection name="[unused]">
+    <source component="cmdDisp" port="seqCmdStatus" type="[unused]" num="1"/>
+    <target component="uplink" port="cmdResponseIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="comm" port="allocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferAllocate" type="[unused]" num="1"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="comm" port="recv" type="[unused]" num="0"/>
+    <target component="uplink" port="framedIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileUplink" port="bufferSendOut" type="[unused]" num="0"/>
+    <target component="fileUplinkBufferManager" port="bufferSendIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="uplink" port="bufferAllocate" type="[unused]" num="0"/>
+    <target component="fileUplinkBufferManager" port="bufferGetCallee" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="uplink" port="bufferDeallocate" type="[unused]" num="0"/>
+    <target component="fileUplinkBufferManager" port="bufferSendIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="uplink" port="bufferOut" type="[unused]" num="0"/>
+    <target component="fileUplink" port="bufferSendIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="uplink" port="comOut" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="seqCmdBuff" type="[unused]" num="1"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="uplink" port="framedDeallocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferDeallocate" type="[unused]" num="1"/>
+  </connection>
+</fpl>

@@ -1,0 +1,346 @@
+{
+  "columns" : [
+    [
+      {
+        "instanceName" : "linuxTimer",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "CycleOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "rateGroupDriverComp",
+        "inputPorts" : [
+          {
+            "name" : "CycleIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "CycleOut",
+            "portNumbers" : [
+              0,
+              1,
+              2
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "rateGroup1Comp",
+        "inputPorts" : [
+          {
+            "name" : "CycleIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "RateGroupMemberOut",
+            "portNumbers" : [
+              1,
+              2,
+              3,
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "instanceName" : "rateGroup2Comp",
+        "inputPorts" : [
+          {
+            "name" : "CycleIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "RateGroupMemberOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "instanceName" : "rateGroup3Comp",
+        "inputPorts" : [
+          {
+            "name" : "CycleIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "RateGroupMemberOut",
+            "portNumbers" : [
+              0,
+              3
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "fileDownlinkP",
+        "inputPorts" : [
+          {
+            "name" : "Run",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : []
+      },
+      {
+        "instanceName" : "chanTlm",
+        "inputPorts" : [
+          {
+            "name" : "Run",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : []
+      },
+      {
+        "instanceName" : "fileDownlink",
+        "inputPorts" : [
+          {
+            "name" : "Run",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : []
+      },
+      {
+        "instanceName" : "systemResources",
+        "inputPorts" : [
+          {
+            "name" : "run",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : []
+      },
+      {
+        "instanceName" : "cmdSeq",
+        "inputPorts" : [
+          {
+            "name" : "schedIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : []
+      },
+      {
+        "instanceName" : "health",
+        "inputPorts" : [
+          {
+            "name" : "Run",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : []
+      },
+      {
+        "instanceName" : "fileUplinkBufferManager",
+        "inputPorts" : [
+          {
+            "name" : "schedIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : []
+      }
+    ]
+  ],
+  "connections" : [
+    [
+      [
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        2,
+        1,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2,
+        1,
+        0,
+        0
+      ],
+      [
+        3,
+        4,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2,
+        2,
+        0,
+        0
+      ],
+      [
+        3,
+        5,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2,
+        0,
+        0,
+        2
+      ],
+      [
+        3,
+        1,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2,
+        0,
+        0,
+        3
+      ],
+      [
+        3,
+        2,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2,
+        0,
+        0,
+        1
+      ],
+      [
+        3,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2,
+        0,
+        0,
+        4
+      ],
+      [
+        3,
+        3,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        1,
+        0,
+        0,
+        2
+      ],
+      [
+        2,
+        2,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2,
+        2,
+        0,
+        3
+      ],
+      [
+        3,
+        6,
+        0,
+        0
+      ]
+    ]
+  ]
+}

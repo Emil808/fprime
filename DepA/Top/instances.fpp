@@ -226,7 +226,6 @@ module DepA {
         Os::TaskString name("ReceiveTask");
         // Uplink is configured for receive so a socket task is started
         comm.configure(state.hostName, state.portNumber);
-        (void) printf("FHELLO\n");
         comm.startSocketTask(
             name,
             true,
@@ -369,13 +368,17 @@ module DepA {
 
     phase Fpp.ToCpp.Phases.startTasks """
     // Initialize socket server if and only if there is a valid specification
-    const char * hostNameP = "127.0.1.1"; 
-    U32 portNumberP = 50100; 
     char hostfile_name[] = "node_hostfile_0.txt"; 
-    if (hostNameP != nullptr && portNumberP != 0) {
+
+    if (state.deviceHostname != nullptr && state.devicePortNumber != 0) {
         Os::TaskString name("commP.Accept");
-        commP.configure(hostNameP, portNumberP); 
-        commP.setDeviceID(0x20202020); 
+        commP.configure(state.deviceHostname, state.devicePortNumber); 
+        if(state.devID == 0){
+            commP.setDeviceID(0x20202020); 
+        }
+        else{
+            commP.setDeviceID(state.devID); 
+        }
         commP.setHostFile(hostfile_name, sizeof(hostfile_name));
         commP.startup(); //todo check that startup starts correctly? 
 
@@ -462,8 +465,12 @@ module DepA {
     instance swarmFramer: DepA.SwarmFramer base id 0x5400 \
     {
         phase Fpp.ToCpp.Phases.configComponents """
-        swarmFramer.setSourceId(0x20202020); 
-
+        if(state.devID == 0){
+            swarmFramer.setSourceId(0x20202020); 
+        }
+        else{
+            swarmFramer.setSourceId(state.devID); 
+        }
         """
     }
 

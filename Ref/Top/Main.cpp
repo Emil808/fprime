@@ -47,7 +47,6 @@ int main(int argc, char* argv[]) {
     char *hostname;
     option = 0;
     hostname = nullptr;
-
     while ((option = getopt(argc, argv, "hp:a:")) != -1){
         switch(option) {
             case 'h':
@@ -59,6 +58,7 @@ int main(int argc, char* argv[]) {
                 break;
             case 'a':
                 hostname = optarg;
+                
                 break;
             case '?':
                 return 1;
@@ -66,8 +66,9 @@ int main(int argc, char* argv[]) {
                 print_usage(argv[0]);
                 return 1;
         }
-    }
 
+    }
+     (void) printf("Hostname: %s, port number: %d\n", hostname, port_number); 
     (void) printf("Hit Ctrl-C to quit\n");
 
     state = Ref::TopologyState(hostname, port_number);

@@ -1,0 +1,78 @@
+<fpl>
+  <connection name="[unused]">
+    <source component="SimpleProducer" port="eventOut" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="SimpleReceiver" port="eventOut" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdDisp" port="Log" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdSeq" port="logOut" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="dynamicMemory" port="eventOut" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="eventLogger" port="Log" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fatalAdapter" port="Log" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlink" port="eventOut" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlinkP" port="eventOut" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileManager" port="eventOut" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileUplink" port="eventOut" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileUplinkBufferManager" port="eventOut" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="Log" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="prmDb" port="Log" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup1Comp" port="Log" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup2Comp" port="Log" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup3Comp" port="Log" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="swarmFramer" port="eventOut" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="systemResources" port="Log" type="[unused]" num="0"/>
+    <target component="eventLogger" port="LogRecv" type="[unused]" num="0"/>
+  </connection>
+</fpl>

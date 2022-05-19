@@ -82,11 +82,13 @@ namespace Drv{
     }
 
     bool TcpClientManager::checkIfAlreadyConnected(U32 device_id){
+        
         for(int i = 0; i < MAX_CLIENTS; i++){
-            if(this->sockets[i].getServerDeviceID() == device_id){
+            if(this->sockets[i].isOpened() && this->sockets[i].getServerDeviceID() == device_id){
                 return true; 
             }
         }
+        
         return false; 
     }
 

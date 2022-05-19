@@ -1,0 +1,46 @@
+<fpl>
+  <connection name="[unused]">
+    <source component="linuxTimer" port="CycleOut" type="[unused]" num="0"/>
+    <target component="rateGroupDriverComp" port="CycleIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup1Comp" port="RateGroupMemberOut" type="[unused]" num="1"/>
+    <target component="fileDownlinkP" port="Run" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup1Comp" port="RateGroupMemberOut" type="[unused]" num="2"/>
+    <target component="chanTlm" port="Run" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup1Comp" port="RateGroupMemberOut" type="[unused]" num="3"/>
+    <target component="fileDownlink" port="Run" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup1Comp" port="RateGroupMemberOut" type="[unused]" num="4"/>
+    <target component="systemResources" port="run" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup2Comp" port="RateGroupMemberOut" type="[unused]" num="0"/>
+    <target component="cmdSeq" port="schedIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup3Comp" port="RateGroupMemberOut" type="[unused]" num="0"/>
+    <target component="health" port="Run" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup3Comp" port="RateGroupMemberOut" type="[unused]" num="3"/>
+    <target component="fileUplinkBufferManager" port="schedIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroupDriverComp" port="CycleOut" type="[unused]" num="0"/>
+    <target component="rateGroup1Comp" port="CycleIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroupDriverComp" port="CycleOut" type="[unused]" num="1"/>
+    <target component="rateGroup2Comp" port="CycleIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroupDriverComp" port="CycleOut" type="[unused]" num="2"/>
+    <target component="rateGroup3Comp" port="CycleIn" type="[unused]" num="0"/>
+  </connection>
+</fpl>

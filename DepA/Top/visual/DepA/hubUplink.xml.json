@@ -1,0 +1,331 @@
+{
+  "columns" : [
+    [
+      {
+        "instanceName" : "commP",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "recv",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "allocate",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "uplinkP",
+        "inputPorts" : [
+          {
+            "name" : "framedIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "bufferAllocate",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "bufferOut",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "framedDeallocate",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "dynamicMemory",
+        "inputPorts" : [
+          {
+            "name" : "bufferGetCallee",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "bufferSendIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : []
+      },
+      {
+        "instanceName" : "hub",
+        "inputPorts" : [
+          {
+            "name" : "dataIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "buffersOut",
+            "portNumbers" : [
+              1
+            ]
+          },
+          {
+            "name" : "dataInDeallocate",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "swarmDeframer",
+        "inputPorts" : [
+          {
+            "name" : "framedIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "bufferAllocate",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "bufferDeallocate",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "framedDeallocate",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "portOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "staticMemory",
+        "inputPorts" : [
+          {
+            "name" : "bufferAllocate",
+            "portNumbers" : [
+              3,
+              7
+            ]
+          },
+          {
+            "name" : "bufferDeallocate",
+            "portNumbers" : [
+              3,
+              7
+            ]
+          }
+        ],
+        "outputPorts" : []
+      },
+      {
+        "instanceName" : "SimpleReceiver",
+        "inputPorts" : [
+          {
+            "name" : "valIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : []
+      }
+    ]
+  ],
+  "connections" : [
+    [
+      [
+        1,
+        0,
+        2,
+        0
+      ],
+      [
+        2,
+        0,
+        1,
+        0
+      ]
+    ],
+    [
+      [
+        3,
+        0,
+        0,
+        0
+      ],
+      [
+        4,
+        0,
+        0,
+        7
+      ]
+    ],
+    [
+      [
+        3,
+        0,
+        1,
+        0
+      ],
+      [
+        4,
+        0,
+        1,
+        7
+      ]
+    ],
+    [
+      [
+        3,
+        0,
+        2,
+        0
+      ],
+      [
+        4,
+        0,
+        1,
+        3
+      ]
+    ],
+    [
+      [
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        3,
+        0,
+        3,
+        0
+      ],
+      [
+        4,
+        1,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2,
+        1,
+        0,
+        1
+      ],
+      [
+        3,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2,
+        1,
+        1,
+        0
+      ],
+      [
+        4,
+        0,
+        1,
+        3
+      ]
+    ],
+    [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        1,
+        0,
+        1,
+        0
+      ],
+      [
+        2,
+        1,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        4,
+        0,
+        0,
+        3
+      ]
+    ]
+  ]
+}

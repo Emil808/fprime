@@ -31,7 +31,7 @@ void DeframerComponentImpl ::init(const NATIVE_INT_TYPE instance) {
 
 DeframerComponentImpl ::~DeframerComponentImpl() {}
 
-void DeframerComponentImpl ::setup(DeframingProtocol& protocol) {
+void DeframerComponentImpl ::setup(DeframingProtocol& protocol) { 
     FW_ASSERT(m_protocol == nullptr);
     m_protocol = &protocol;
     protocol.setup(*this);
@@ -52,9 +52,11 @@ void DeframerComponentImpl ::cmdResponseIn_handler(NATIVE_INT_TYPE portNum,
 void DeframerComponentImpl ::framedIn_handler(const NATIVE_INT_TYPE portNum,
                                               Fw::Buffer& recvBuffer,
                                               const Drv::RecvStatus& recvStatus) {
+                                                  
     if (Drv::RecvStatus::RECV_OK == recvStatus.e) {
         processBuffer(recvBuffer);
     }
+    
     framedDeallocate_out(0, recvBuffer);
 }
 

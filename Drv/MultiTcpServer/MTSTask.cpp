@@ -192,6 +192,8 @@ namespace Drv{
             if(self->getSocketManager().getSocketHandler(index).isOpened() and (not self->m_stop)){
                 Fw::Buffer buffer = self->getBuffer(); //todo: handle failed getBuffer from bufferManager
                 if(buffer.getSize() == 0){ // getBuffer returned with size of 0, skip loop and try again. 
+                    self->sendBuffer(buffer, SOCK_READ_ERROR); //empty buffer causes assert when sending an empty buffer up, what to do??
+                    //deallocate it? dummy data, then send it up? deframer would deallocate
                     continue; 
                 }
                 U8* data = buffer.getData(); 
@@ -208,7 +210,7 @@ namespace Drv{
                 if ((status != SOCK_SUCCESS) && (status != SOCK_INTERRUPTED_TRY_AGAIN)) {
                     Fw::Logger::logMsg("[WARNING] Failed to recv from port with status %d and errno %d\n", status, errno);
                     self->getSocketManager().getSocketHandler(index).close();
-                    buffer.setSize(0);
+                    //buffer.setSize(0);
                 } else {
                     // Send out received data
                     buffer.setSize(size);

@@ -1,0 +1,313 @@
+{
+  "columns" : [
+    [
+      {
+        "instanceName" : "SimpleProducer",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "cmdRegOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "instanceName" : "cmdSeq",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "cmdRegOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "instanceName" : "eventLogger",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "CmdReg",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "instanceName" : "fileDownlink",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "cmdRegOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "instanceName" : "fileDownlinkP",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "cmdRegOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "instanceName" : "fileManager",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "cmdRegOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "instanceName" : "health",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "CmdReg",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "instanceName" : "prmDb",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "CmdReg",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "instanceName" : "swarmFramer",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "cmdRegOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "instanceName" : "systemResources",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "CmdReg",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "cmdDisp",
+        "inputPorts" : [
+          {
+            "name" : "compCmdReg",
+            "portNumbers" : [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "CmdReg",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  ],
+  "connections" : [
+    [
+      [
+        0,
+        8,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        9
+      ]
+    ],
+    [
+      [
+        0,
+        7,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        8
+      ]
+    ],
+    [
+      [
+        0,
+        4,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        5
+      ]
+    ],
+    [
+      [
+        0,
+        5,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        6
+      ]
+    ],
+    [
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        2
+      ]
+    ],
+    [
+      [
+        0,
+        2,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        3
+      ]
+    ],
+    [
+      [
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        1
+      ]
+    ],
+    [
+      [
+        0,
+        3,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        4
+      ]
+    ],
+    [
+      [
+        0,
+        9,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        10
+      ]
+    ],
+    [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        0,
+        6,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        7
+      ]
+    ]
+  ]
+}

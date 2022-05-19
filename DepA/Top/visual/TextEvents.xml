@@ -1,0 +1,78 @@
+<fpl>
+  <connection name="[unused]">
+    <source component="SimpleProducer" port="textEventOut" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="SimpleReceiver" port="textEventOut" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdDisp" port="LogText" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdSeq" port="LogText" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="dynamicMemory" port="textEventOut" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="eventLogger" port="LogText" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fatalAdapter" port="LogText" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlink" port="textEventOut" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlinkP" port="textEventOut" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileManager" port="LogText" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileUplink" port="LogText" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileUplinkBufferManager" port="textEventOut" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="LogText" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="prmDb" port="LogText" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup1Comp" port="LogText" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup2Comp" port="LogText" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup3Comp" port="LogText" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="swarmFramer" port="textEventOut" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="systemResources" port="LogText" type="[unused]" num="0"/>
+    <target component="textLogger" port="TextLogger" type="[unused]" num="0"/>
+  </connection>
+</fpl>

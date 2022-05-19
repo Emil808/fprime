@@ -1,0 +1,42 @@
+<fpl>
+  <connection name="[unused]">
+    <source component="SimpleProducer" port="valOut" type="[unused]" num="0"/>
+    <target component="swarmFramer" port="portIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="commP" port="deallocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferDeallocate" type="[unused]" num="4"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="downlinkP" port="bufferDeallocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferDeallocate" type="[unused]" num="2"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="downlinkP" port="framedAllocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferAllocate" type="[unused]" num="4"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="downlinkP" port="framedOut" type="[unused]" num="0"/>
+    <target component="commP" port="send" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="hub" port="bufferDeallocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferDeallocate" type="[unused]" num="6"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="hub" port="dataOut" type="[unused]" num="0"/>
+    <target component="downlinkP" port="bufferIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="hub" port="dataOutAllocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferAllocate" type="[unused]" num="2"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="swarmFramer" port="framedAllocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferAllocate" type="[unused]" num="6"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="swarmFramer" port="framedOut" type="[unused]" num="0"/>
+    <target component="hub" port="buffersIn" type="[unused]" num="1"/>
+  </connection>
+</fpl>

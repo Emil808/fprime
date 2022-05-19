@@ -1,0 +1,86 @@
+<fpl>
+  <connection name="[unused]">
+    <source component="SimpleProducer" port="timeGetOut" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="SimpleReceiver" port="timeGetOut" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdDisp" port="Time" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdSeq" port="timeCaller" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="downlink" port="timeGet" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="downlinkP" port="timeGet" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="dynamicMemory" port="timeCaller" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="eventLogger" port="Time" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fatalAdapter" port="Time" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlink" port="timeCaller" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlinkP" port="timeCaller" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileManager" port="timeCaller" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileUplink" port="timeCaller" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileUplinkBufferManager" port="timeCaller" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="Time" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="prmDb" port="Time" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup1Comp" port="Time" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup2Comp" port="Time" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup3Comp" port="Time" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="swarmFramer" port="timeGet" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="systemResources" port="Time" type="[unused]" num="0"/>
+    <target component="linuxTime" port="timeGetPort" type="[unused]" num="0"/>
+  </connection>
+</fpl>

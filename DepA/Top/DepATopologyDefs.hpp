@@ -19,21 +19,27 @@ namespace DepA{
         TopologyState():
             hostName(""),
             portNumber(0),
-            devID(0)
+            devID(0),
+            deviceHostname(""),
+            devicePortNumber(0)
         {
 
         }
 
-        TopologyState(const char* hostName, U32 portNumber, U32 devID) : 
+        TopologyState(const char* hostName, U32 portNumber, U32 devID, const char* deviceHostname, U32 devicePortNumber) : 
             hostName(hostName), 
             portNumber(portNumber),
-            devID(devID)
+            devID(devID),
+            deviceHostname(deviceHostname),
+            devicePortNumber(devicePortNumber)
         {
 
         }
         const char* hostName; 
         U32 portNumber; 
         U32 devID; 
+        const char* deviceHostname; 
+        U32 devicePortNumber; 
     };
 
     namespace PingEntries{

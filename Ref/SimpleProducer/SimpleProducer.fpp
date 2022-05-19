@@ -6,7 +6,7 @@ module Ref{
     # ----------------------------------------------------------------------
     
     @ Port for sending value
-    output port valOut: simplePort
+    output port valOut: SimplePort
 
     # ----------------------------------------------------------------------
     # Special ports

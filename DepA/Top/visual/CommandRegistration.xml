@@ -1,0 +1,46 @@
+<fpl>
+  <connection name="[unused]">
+    <source component="SimpleProducer" port="cmdRegOut" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdReg" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdDisp" port="CmdReg" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdReg" type="[unused]" num="1"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdSeq" port="cmdRegOut" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdReg" type="[unused]" num="2"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="eventLogger" port="CmdReg" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdReg" type="[unused]" num="3"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlink" port="cmdRegOut" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdReg" type="[unused]" num="4"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlinkP" port="cmdRegOut" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdReg" type="[unused]" num="5"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileManager" port="cmdRegOut" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdReg" type="[unused]" num="6"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="CmdReg" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdReg" type="[unused]" num="7"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="prmDb" port="CmdReg" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdReg" type="[unused]" num="8"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="swarmFramer" port="cmdRegOut" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdReg" type="[unused]" num="9"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="systemResources" port="CmdReg" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdReg" type="[unused]" num="10"/>
+  </connection>
+</fpl>

@@ -1,0 +1,10 @@
+<fpl>
+  <connection name="[unused]">
+    <source component="cmdDisp" port="seqCmdStatus" type="[unused]" num="0"/>
+    <target component="cmdSeq" port="cmdResponseIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdSeq" port="comCmdOut" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="seqCmdBuff" type="[unused]" num="0"/>
+  </connection>
+</fpl>

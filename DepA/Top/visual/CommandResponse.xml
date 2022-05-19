@@ -1,0 +1,46 @@
+<fpl>
+  <connection name="[unused]">
+    <source component="SimpleProducer" port="cmdResponseOut" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdStat" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdDisp" port="CmdStatus" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdStat" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdSeq" port="cmdResponseOut" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdStat" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="eventLogger" port="CmdStatus" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdStat" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlink" port="cmdResponseOut" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdStat" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlinkP" port="cmdResponseOut" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdStat" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileManager" port="cmdResponseOut" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdStat" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="CmdStatus" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdStat" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="prmDb" port="CmdStatus" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdStat" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="swarmFramer" port="cmdResponseOut" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdStat" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="systemResources" port="CmdStatus" type="[unused]" num="0"/>
+    <target component="cmdDisp" port="compCmdStat" type="[unused]" num="0"/>
+  </connection>
+</fpl>

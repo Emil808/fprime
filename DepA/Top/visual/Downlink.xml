@@ -1,0 +1,30 @@
+<fpl>
+  <connection name="[unused]">
+    <source component="chanTlm" port="PktSend" type="[unused]" num="0"/>
+    <target component="downlink" port="comIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="comm" port="deallocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferDeallocate" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="downlink" port="bufferDeallocate" type="[unused]" num="0"/>
+    <target component="fileDownlink" port="bufferReturn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="downlink" port="framedAllocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferAllocate" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="downlink" port="framedOut" type="[unused]" num="0"/>
+    <target component="comm" port="send" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="eventLogger" port="PktSend" type="[unused]" num="0"/>
+    <target component="downlink" port="comIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlink" port="bufferSendOut" type="[unused]" num="0"/>
+    <target component="downlink" port="bufferIn" type="[unused]" num="0"/>
+  </connection>
+</fpl>

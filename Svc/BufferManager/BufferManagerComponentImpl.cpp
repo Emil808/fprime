@@ -58,7 +58,7 @@ namespace Svc {
 
   void BufferManagerComponentImpl ::
     cleanup()
-  {
+  {   
       FW_ASSERT(this->m_buffers);
       FW_ASSERT(this->m_allocator);
 
@@ -68,7 +68,7 @@ namespace Svc {
               this->m_buffers[entry].buff.~Buffer();
           }
           this->m_cleaned = true;
-          // release memory
+          // release memory 
           this->m_allocator->deallocate(this->m_memId,this->m_buffers);
           this->m_setup = false;
       }
@@ -84,7 +84,7 @@ namespace Svc {
         const NATIVE_INT_TYPE portNum,
         Fw::Buffer &fwBuffer
     )
-  {
+  {   
       // make sure component has been set up
       FW_ASSERT(this->m_setup);
       FW_ASSERT(m_buffers);
@@ -117,7 +117,7 @@ namespace Svc {
         const NATIVE_INT_TYPE portNum,
         U32 size
     )
-  {
+  {   
       // make sure component has been set up
       FW_ASSERT(this->m_setup);
       FW_ASSERT(m_buffers);
@@ -177,7 +177,7 @@ namespace Svc {
     // allocate memory
     void *memory = allocator.allocate(memId,allocatedSize,recoverable);
     // make sure the memory returns was non-zero and the size requested
-    FW_ASSERT(memory);
+    FW_ASSERT(memory); 
     FW_ASSERT(memorySize == allocatedSize,memorySize,allocatedSize);
     // structs will be at beginning of memory
     this->m_buffers = static_cast<AllocatedBuffer*>(memory);
@@ -200,7 +200,7 @@ namespace Svc {
                 bufferMem += this->m_bufferBins.bins[bin].bufferSize;
                 currStruct++;
             }
-        }
+        } 
     }
 
     // check that the initiation pointer made it to the end of allocated space

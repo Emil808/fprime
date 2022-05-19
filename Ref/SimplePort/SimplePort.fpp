@@ -1,5 +1,5 @@
 module Ref {
-    port simplePort(
+    port SimplePort(
         val1: F32
     )
 }

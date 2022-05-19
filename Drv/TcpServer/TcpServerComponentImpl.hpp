@@ -136,9 +136,9 @@ class TcpServerComponentImpl : public ByteStreamDriverModelComponentBase, public
     // ----------------------------------------------------------------------
 
     /**
-     * \brief Send data out of the TcpClient
+     * \brief Send data out of the TcpServer
      *
-     * Passing data to this port will send data from the TcpClient to whatever TCP server this component has connected
+     * Passing data to this port will send data from the TcpServer to the TcpClient this component has connected
      * to. Should the socket not be opened or was disconnected, then this port call will return SEND_RETRY and critical
      * transmissions should be retried. SEND_ERROR indicates an unresolvable error. SEND_OK is returned when the data
      * has been sent.

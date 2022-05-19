@@ -1,0 +1,98 @@
+<fpl>
+  <connection name="[unused]">
+    <source component="chanTlm" port="pingOut" type="[unused]" num="0"/>
+    <target component="health" port="PingReturn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdDisp" port="pingOut" type="[unused]" num="0"/>
+    <target component="health" port="PingReturn" type="[unused]" num="1"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdSeq" port="pingOut" type="[unused]" num="0"/>
+    <target component="health" port="PingReturn" type="[unused]" num="2"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="eventLogger" port="pingOut" type="[unused]" num="0"/>
+    <target component="health" port="PingReturn" type="[unused]" num="3"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlink" port="pingOut" type="[unused]" num="0"/>
+    <target component="health" port="PingReturn" type="[unused]" num="4"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlinkP" port="pingOut" type="[unused]" num="0"/>
+    <target component="health" port="PingReturn" type="[unused]" num="5"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileManager" port="pingOut" type="[unused]" num="0"/>
+    <target component="health" port="PingReturn" type="[unused]" num="6"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileUplink" port="pingOut" type="[unused]" num="0"/>
+    <target component="health" port="PingReturn" type="[unused]" num="7"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="PingSend" type="[unused]" num="0"/>
+    <target component="chanTlm" port="pingIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="PingSend" type="[unused]" num="1"/>
+    <target component="cmdDisp" port="pingIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="PingSend" type="[unused]" num="2"/>
+    <target component="cmdSeq" port="pingIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="PingSend" type="[unused]" num="3"/>
+    <target component="eventLogger" port="pingIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="PingSend" type="[unused]" num="4"/>
+    <target component="fileDownlink" port="pingIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="PingSend" type="[unused]" num="5"/>
+    <target component="fileDownlinkP" port="pingIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="PingSend" type="[unused]" num="6"/>
+    <target component="fileManager" port="pingIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="PingSend" type="[unused]" num="7"/>
+    <target component="fileUplink" port="pingIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="PingSend" type="[unused]" num="8"/>
+    <target component="prmDb" port="pingIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="PingSend" type="[unused]" num="9"/>
+    <target component="rateGroup1Comp" port="PingIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="PingSend" type="[unused]" num="10"/>
+    <target component="rateGroup2Comp" port="PingIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="PingSend" type="[unused]" num="11"/>
+    <target component="rateGroup3Comp" port="PingIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="prmDb" port="pingOut" type="[unused]" num="0"/>
+    <target component="health" port="PingReturn" type="[unused]" num="8"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup1Comp" port="PingOut" type="[unused]" num="0"/>
+    <target component="health" port="PingReturn" type="[unused]" num="9"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup2Comp" port="PingOut" type="[unused]" num="0"/>
+    <target component="health" port="PingReturn" type="[unused]" num="10"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup3Comp" port="PingOut" type="[unused]" num="0"/>
+    <target component="health" port="PingReturn" type="[unused]" num="11"/>
+  </connection>
+</fpl>

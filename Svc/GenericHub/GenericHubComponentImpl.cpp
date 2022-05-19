@@ -35,7 +35,7 @@ GenericHubComponentImpl ::~GenericHubComponentImpl() {}
 void GenericHubComponentImpl ::send_data(const HubType type,
                                          const NATIVE_INT_TYPE port,
                                          const U8* data,
-                                         const U32 size) {
+                                         const U32 size) { 
     FW_ASSERT(data != nullptr);
     Fw::SerializeStatus status;
     // Buffer to send and a buffer used to write to it

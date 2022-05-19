@@ -186,6 +186,11 @@ module Ref {
 
   }
 
+  instance SimpleProducer: Ref.SimpleProducer base id 0x0E00 \
+    queue size Default.queueSize \
+    stack size Default.stackSize \ 
+    priority 100
+
   # ----------------------------------------------------------------------
   # Queued component instances
   # ----------------------------------------------------------------------
@@ -365,4 +370,5 @@ module Ref {
 
   instance systemResources: Svc.SystemResources base id 0x4B00
 
+  instance SimpleReceiver: Ref.SimpleReceiver base id 0x4C00
 }

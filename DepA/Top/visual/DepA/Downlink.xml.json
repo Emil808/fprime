@@ -1,0 +1,229 @@
+{
+  "columns" : [
+    [
+      {
+        "instanceName" : "chanTlm",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "PktSend",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "instanceName" : "eventLogger",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "PktSend",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "downlink",
+        "inputPorts" : [
+          {
+            "name" : "comIn",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "bufferIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "bufferDeallocate",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "framedAllocate",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "framedOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "fileDownlink",
+        "inputPorts" : [
+          {
+            "name" : "bufferReturn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "bufferSendOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "instanceName" : "comm",
+        "inputPorts" : [
+          {
+            "name" : "send",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "deallocate",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "staticMemory",
+        "inputPorts" : [
+          {
+            "name" : "bufferDeallocate",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "bufferAllocate",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : []
+      }
+    ]
+  ],
+  "connections" : [
+    [
+      [
+        1,
+        0,
+        2,
+        0
+      ],
+      [
+        2,
+        1,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        1,
+        0,
+        1,
+        0
+      ],
+      [
+        3,
+        0,
+        1,
+        0
+      ]
+    ],
+    [
+      [
+        2,
+        1,
+        0,
+        0
+      ],
+      [
+        3,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        1,
+        0
+      ]
+    ]
+  ]
+}

@@ -1,0 +1,6 @@
+<fpl>
+  <connection name="[unused]">
+    <source component="eventLogger" port="FatalAnnounce" type="[unused]" num="0"/>
+    <target component="fatalHandler" port="FatalReceive" type="[unused]" num="0"/>
+  </connection>
+</fpl>

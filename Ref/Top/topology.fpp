@@ -54,6 +54,8 @@ module Ref {
     instance uplink
     instance systemResources
 
+    instance SimpleProducer
+    instance SimpleReceiver
     # ----------------------------------------------------------------------
     # Pattern graph specifiers
     # ----------------------------------------------------------------------
@@ -148,7 +150,10 @@ module Ref {
       fileUplink.bufferSendOut -> fileUplinkBufferManager.bufferSendIn
 
     }
-
+    
+     connections Simple {
+      SimpleProducer.valOut -> SimpleReceiver.valIn
+    }
   }
 
 }

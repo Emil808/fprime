@@ -1,0 +1,66 @@
+<fpl>
+  <connection name="[unused]">
+    <source component="SimpleProducer" port="tlmOut" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="SimpleReceiver" port="tlmOut" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdDisp" port="Tlm" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="cmdSeq" port="tlmOut" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="dynamicMemory" port="tlmOut" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlink" port="tlmOut" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileDownlinkP" port="tlmOut" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileManager" port="tlmOut" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileUplink" port="tlmOut" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="fileUplinkBufferManager" port="tlmOut" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="health" port="Tlm" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup1Comp" port="Tlm" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup2Comp" port="Tlm" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="rateGroup3Comp" port="Tlm" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="swarmFramer" port="tlmOut" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="systemResources" port="Tlm" type="[unused]" num="0"/>
+    <target component="chanTlm" port="TlmRecv" type="[unused]" num="0"/>
+  </connection>
+</fpl>

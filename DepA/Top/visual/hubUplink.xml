@@ -1,0 +1,46 @@
+<fpl>
+  <connection name="[unused]">
+    <source component="commP" port="allocate" type="[unused]" num="0"/>
+    <target component="dynamicMemory" port="bufferGetCallee" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="commP" port="recv" type="[unused]" num="0"/>
+    <target component="uplinkP" port="framedIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="hub" port="buffersOut" type="[unused]" num="1"/>
+    <target component="swarmDeframer" port="framedIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="hub" port="dataInDeallocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferDeallocate" type="[unused]" num="3"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="swarmDeframer" port="bufferAllocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferAllocate" type="[unused]" num="7"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="swarmDeframer" port="bufferDeallocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferDeallocate" type="[unused]" num="7"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="swarmDeframer" port="framedDeallocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferDeallocate" type="[unused]" num="3"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="swarmDeframer" port="portOut" type="[unused]" num="0"/>
+    <target component="SimpleReceiver" port="valIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="uplinkP" port="bufferAllocate" type="[unused]" num="0"/>
+    <target component="staticMemory" port="bufferAllocate" type="[unused]" num="3"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="uplinkP" port="bufferOut" type="[unused]" num="0"/>
+    <target component="hub" port="dataIn" type="[unused]" num="0"/>
+  </connection>
+  <connection name="[unused]">
+    <source component="uplinkP" port="framedDeallocate" type="[unused]" num="0"/>
+    <target component="dynamicMemory" port="bufferSendIn" type="[unused]" num="0"/>
+  </connection>
+</fpl>
