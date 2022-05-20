@@ -15,6 +15,8 @@ module DepA{
         commP
         swarmFramer
         swarmDeframer
+        GPSFramer
+        GPSDeframer
     }
 
     topology DepA{
@@ -60,6 +62,10 @@ module DepA{
         instance swarmDeframer
         instance SimpleReceiver
         instance uplinkP
+
+        instance swarmDeframerGPS
+        instance swarmFramerGPS
+        instance GPS
 
         # ------------------------------
         # pattern graph specifiers
@@ -122,6 +128,7 @@ module DepA{
             linuxTimer.CycleOut -> rateGroupDriverComp.CycleIn
             # Rate group 1
             rateGroupDriverComp.CycleOut[Ports_RateGroups.rateGroup1] -> rateGroup1Comp.CycleIn
+            rateGroup1Comp.RateGroupMemberOut[0] -> GPS.ping
             rateGroup1Comp.RateGroupMemberOut[1] -> fileDownlinkP.Run
             rateGroup1Comp.RateGroupMemberOut[2] -> chanTlm.Run
             rateGroup1Comp.RateGroupMemberOut[3] -> fileDownlink.Run
@@ -131,6 +138,7 @@ module DepA{
             # Rate group 2
             rateGroupDriverComp.CycleOut[Ports_RateGroups.rateGroup2] -> rateGroup2Comp.CycleIn
             rateGroup2Comp.RateGroupMemberOut[0] -> cmdSeq.schedIn
+          
 
             # Rate group 3
             rateGroupDriverComp.CycleOut[Ports_RateGroups.rateGroup3] -> rateGroup3Comp.CycleIn
@@ -141,10 +149,14 @@ module DepA{
 
         connections hubDownlink{
             SimpleProducer.valOut -> swarmFramer.portIn
+            GPS.ecPosition -> swarmFramerGPS.portIn
 
             swarmFramer.framedAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.swarmFramer]
-            
+            swarmFramerGPS.framedAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.swarmFramer]
+
             swarmFramer.framedOut -> hub.buffersIn[1]
+            swarmFramerGPS.framedOut -> hub.buffersIn[2] 
+
             hub.bufferDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.swarmFramer]
 
             hub.dataOutAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.hub]
@@ -168,14 +180,20 @@ module DepA{
             hub.dataInDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub2] 
 
             hub.buffersOut[1] -> swarmDeframer.framedIn
-
+            hub.buffersOut[2] -> swarmDeframerGPS.framedIn
             
             swarmDeframer.bufferAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.swarmDeframer]
             swarmDeframer.bufferDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.swarmDeframer]
+
+            swarmDeframerGPS.bufferAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.GPSDeframer]
+            swarmDeframerGPS.bufferDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.GPSDeframer]
             
             # for buffer -> hub -> buffer
             swarmDeframer.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub2] 
+            
+            swarmDeframerGPS.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub2]
 
+            swarmDeframerGPS.portOut -> GPS.remotePosition 
             swarmDeframer.portOut -> SimpleReceiver.valIn
         }
 

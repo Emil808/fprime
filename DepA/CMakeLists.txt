@@ -47,6 +47,7 @@ add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SimpleProducer/")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SwarmFramer/")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SwarmDeframer/")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SimpleReceiver/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/sGPS/")
 # Add Topology subdirectory
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Top/")
 

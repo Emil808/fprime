@@ -172,9 +172,13 @@ module DepA {
     instance SimpleProducer: DepA.SimpleProducer base id 0x0E00 \
         queue size Default.queueSize \
         stack size Default.stackSize \ 
-        priority 100
+        priority 100 
 
 
+    instance GPS: DepA.sGPS base id 0x1100 \
+        queue size Default.queueSize \
+        stack size Default.stackSize \ 
+        priority 101 
     # ----------------------------------------------------------------------
     # Queued component instances
     # ----------------------------------------------------------------------
@@ -474,11 +478,25 @@ module DepA {
         """
     }
 
+    instance swarmFramerGPS: DepA.SwarmFramer base id 0x5600 \ 
+    {
+        phase Fpp.ToCpp.Phases.configComponents """
+        if(state.devID == 0){
+            swarmFramerGPS.setSourceId(0x20202020); 
+        }
+        else{
+            swarmFramerGPS.setSourceId(state.devID); 
+        }
+        """
+    }
+
     instance SimpleReceiver: DepA.SimpleReceiver base id 0x4D00 
 
     instance swarmDeframer: DepA.SwarmDeframer base id 0x5500 
 
-    instance uplinkP: Svc.Deframer base id 0x5600 {
+    instance swarmDeframerGPS: DepA.SwarmDeframer base id 0x5700 
+
+    instance uplinkP: Svc.Deframer base id 0x5800 {
 
         phase Fpp.ToCpp.Phases.configObjects """
         Svc::FprimeDeframing deframing;

@@ -27,7 +27,7 @@ namespace DepA {
         const char *const compName
     ) : SwarmFramerComponentBase(compName)
   {
-
+    this->node_destId = 0x30303030; 
   }
 
   void SwarmFramer ::
@@ -75,9 +75,11 @@ namespace DepA {
         Fw::SerializeBufferBase &Buffer /*!< The serialization buffer*/
     )
   {
-    this->frame(Buffer.getBuffAddr(), Buffer.getBuffLength());    
-  }
 
+    this->frame(Buffer.getBuffAddr(), Buffer.getBuffLength());    
+
+  }
+  
   void SwarmFramer::frame(const U8* const data, const U32 size){
     // get get buffer that fits framed
     U32 total_size = size + 12; 
@@ -112,8 +114,9 @@ namespace DepA {
 
     buffer.setSize(total_size); 
     
-  
+    
     framedOut_out(0, buffer); 
+
   }
   // ----------------------------------------------------------------------
   // Command handler implementations
