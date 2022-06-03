@@ -7,8 +7,28 @@ Example for a 5 Node network on Linux (tested on Ubuntu 20.04). Assuming you can
 2. Open up 10 Terminals, and change directory into `/DepA`
 3. For 5 terminal, run each command to open a fprime-gds instance. The commands can be found in [commands_to_run.txt](commands_to_run.txt)
 4. For the next 5 terminals, run each command to start a deployment instance. The commands can be found in [commands_to_run.txt](commands_to_run.txt)
-
 Suggesetions to streamline the above process will be appreciated. 
+
+Now that the Deployments are running, connected to each other and to the fprime-gds, on the fprime-gds interface you can issue these commands: 
+
+### swarmFramerGPS.SET_DESTID 
+- Sets the Destination ID for the Node to receive the sending Node's GPS position
+
+### swarmFramer.SET_DESTID    
+- Sets the Destination ID for the Node to receive the sending Node's Simple Producer data. 
+
+### SimpleProducer.SET_NUM    
+- Invokes the Simple Producer to output the argument (Float 32-bit). The receiving Node, based on the most recent swarmFramer.SET_DESTID, should send a Low Activity Event to the GDS it is connected to. 
+
+Node Destination IDS:
+- 0x20202020
+- 0x20202021
+- 0x20202022
+- 0x20202023
+- 0x20202024
+- 0x30303030 - For now, a temporary Broadcast ID. Setting DEST_ID to this, all Nodes will receive the data packet. 
+
+
 
 
 ## About 
