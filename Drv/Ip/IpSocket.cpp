@@ -15,6 +15,7 @@
 #include <Fw/Types/BasicTypes.hpp>
 #include <Fw/Types/StringUtils.hpp>
 
+#include <stdio.h>
 // This implementation has primarily implemented to isolate
 // the socket interface from the F' Fw::Buffer class.
 // There is a macro in VxWorks (m_data) that collides with
@@ -158,6 +159,7 @@ SocketIpStatus IpSocket::send(const U8* const data, const U32 size) {
         else if (sent == -1) {
             return SOCK_SEND_ERROR;
         }
+
         FW_ASSERT(sent > 0, sent);
         total += sent;
     }

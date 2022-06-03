@@ -23,7 +23,7 @@ enum IpCfg {
     SOCKET_MAX_HOSTNAME_SIZE = 256,        // Maximum stored hostname
 };
 
-#define MAX_CLIENTS 5
+#define MAX_CLIENTS 10
 #define MAX_HOSTFILE_NAME_SIZE 256 
 
 #endif //REF_IPCFG_HPP

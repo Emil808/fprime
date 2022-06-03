@@ -67,6 +67,8 @@ module DepA{
         instance swarmFramerGPS
         instance GPS
 
+        instance swarmFramerBufferManager
+
         # ------------------------------
         # pattern graph specifiers
         # ------------------------------
@@ -151,13 +153,13 @@ module DepA{
             SimpleProducer.valOut -> swarmFramer.portIn
             GPS.ecPosition -> swarmFramerGPS.portIn
 
-            swarmFramer.framedAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.swarmFramer]
-            swarmFramerGPS.framedAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.swarmFramer]
+            swarmFramer.framedAllocate -> swarmFramerBufferManager.bufferGetCallee
+            swarmFramerGPS.framedAllocate -> swarmFramerBufferManager.bufferGetCallee
 
             swarmFramer.framedOut -> hub.buffersIn[1]
             swarmFramerGPS.framedOut -> hub.buffersIn[2] 
 
-            hub.bufferDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.swarmFramer]
+            hub.bufferDeallocate -> swarmFramerBufferManager.bufferSendIn
 
             hub.dataOutAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.hub]
             hub.dataOut -> downlinkP.bufferIn
@@ -182,14 +184,14 @@ module DepA{
             hub.buffersOut[1] -> swarmDeframer.framedIn
             hub.buffersOut[2] -> swarmDeframerGPS.framedIn
             
-            swarmDeframer.bufferAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.swarmDeframer]
-            swarmDeframer.bufferDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.swarmDeframer]
+            swarmDeframer.bufferAllocate -> swarmFramerBufferManager.bufferGetCallee
+            swarmDeframer.bufferDeallocate -> swarmFramerBufferManager.bufferSendIn
 
-            swarmDeframerGPS.bufferAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.GPSDeframer]
-            swarmDeframerGPS.bufferDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.GPSDeframer]
+            swarmDeframerGPS.bufferAllocate -> swarmFramerBufferManager.bufferGetCallee
+            swarmDeframerGPS.bufferDeallocate -> swarmFramerBufferManager.bufferSendIn
             
             # for buffer -> hub -> buffer
-            swarmDeframer.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub2] 
+            swarmDeframer.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub2]
             
             swarmDeframerGPS.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.hub2]
 

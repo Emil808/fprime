@@ -178,6 +178,24 @@ class MultiTcpServerComponentImpl : public ByteStreamDriverModelComponentBase, p
          */
         Drv::PollStatus poll_handler(const NATIVE_INT_TYPE portNum, Fw::Buffer& fwBuffer); 
 
+        /**
+         * @brief Private function to update the adjacency matrix
+         * 
+         */
+        void update_adjacency_matrix(); 
+
+        /**
+         * @brief Initializes the adjacency matrix
+         * 
+         */
+        void init_adjacency_matrix();
+
+        /**
+         * @brief Checks connection mask in adjacency matrix
+         * 
+         */
+        bool check_adjacency_matrix(U32 receiverID); 
+
         Drv::MultiTcpServerManager m_manager; //!< Manager that to handle multiple sockets. 
         Drv::TcpClientManager m_CManager; 
         U32 DeviceID; 
@@ -186,6 +204,9 @@ class MultiTcpServerComponentImpl : public ByteStreamDriverModelComponentBase, p
 
         char hostfile_name[MAX_HOSTFILE_NAME_SIZE]; 
         FILE *fp; 
+
+        FILE *adjFP;
+        U8 adj_M[MAX_CLIENTS]; //adjacency matrix 
     
 
 }; //class end

@@ -176,7 +176,7 @@ module DepA {
 
 
     instance GPS: DepA.sGPS base id 0x1100 \
-        queue size Default.queueSize \
+        queue size 40 \
         stack size Default.stackSize \ 
         priority 101 
     # ----------------------------------------------------------------------
@@ -463,6 +463,30 @@ module DepA {
 
     phase Fpp.ToCpp.Phases.tearDownComponents """
         dynamicMemory.cleanup(); 
+    """
+    }
+    
+    instance swarmFramerBufferManager: Svc.BufferManager base id 0x5900 \
+    {
+
+    phase Fpp.ToCpp.Phases.instances """
+        Svc::BufferManager swarmFramerBufferManager(FW_OPTIONAL_NAME("swarmFramerBufferManager"));
+    """
+    phase Fpp.ToCpp.Phases.configComponents"""
+        
+        
+        Svc::BufferManagerComponentImpl::BufferBins swarmBins;
+        memset(&swarmBins,0,sizeof(swarmBins));
+        swarmBins.bins[0].bufferSize = 1024; 
+        swarmBins.bins[0].numBuffers = 5; 
+        
+        static Fw::MallocAllocator swarmAllocator; 
+        swarmFramerBufferManager.setup(0x5900, 0x50, swarmAllocator ,swarmBins);
+        
+    """
+
+    phase Fpp.ToCpp.Phases.tearDownComponents """
+        swarmFramerBufferManager.cleanup(); 
     """
     }
 

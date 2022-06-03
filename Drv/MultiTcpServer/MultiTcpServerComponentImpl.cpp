@@ -8,6 +8,8 @@
 #include <cerrno> 
 
 #include <sys/signal.h> 
+
+#include <stdlib.h>
 namespace Drv{
     
     // ----------------------------------------------------------------------
@@ -16,7 +18,10 @@ namespace Drv{
 
     MultiTcpServerComponentImpl::MultiTcpServerComponentImpl(const char* const compName)
         : ByteStreamDriverModelComponentBase(compName), AcceptClientTask(), SocketOpenTask(), fp(NULL)
-    {}
+    {
+        init_adjacency_matrix(); 
+        this->adjFP = NULL; 
+    }
 
     void MultiTcpServerComponentImpl::init(const NATIVE_INT_TYPE instance){
         ByteStreamDriverModelComponentBase::init(instance); 
@@ -60,7 +65,8 @@ namespace Drv{
         // "IDXXXX" - Receiver's ID
         // {} - Data from component.
         // if using ID protocol
-
+        
+        SendStatus status2 = SendStatus::SEND_ERROR; 
         U32 index = 0; 
         U32 receiverID = 0; 
         //char ID_string[5] = {0};
@@ -81,22 +87,43 @@ namespace Drv{
                         break; 
                     }
                 }
-            }
+            } 
             if(data[index] != 'I' && data[index+1] != 'D'){ // Id Protocol header incorrect
+            
                 deallocate_out(0, fwBuffer); 
-                return SendStatus::SEND_ERROR; 
             }        
         }
+      
+        // check adj matrix
+        //if check failes, deallocate and return, SENDSTATUS::SEND_ERROR
+        //no else, just let code continue
+
         Drv::SocketIpStatus status;
-        if(receiverID != 808464432){    // receiverID is not 808464432, send to a specific connection
+        if(receiverID == 808464432){    // receiverID is 808464432, send broadcast
+            for(int i = 0; i < MAX_CLIENTS; i++){
 
-            if(m_CManager.checkIfAlreadyConnected(receiverID)){
-                
+                if(m_CManager.getSocketHandler(i).isOpened() && check_adjacency_matrix(m_CManager.getSocketHandler(i).getServerDeviceID())){ // destination node connection is open and connection mask is allowed
+                    status = m_CManager.getSocketHandler(i).send(fwBuffer.getData(), fwBuffer.getSize()); 
+                }
+            }
+            
+            deallocate_out(0, fwBuffer); 
+            if (status == SOCK_SUCCESS){
+                status2 = SendStatus::SEND_OK; 
+            }
+
+        }
+
+        else if(check_adjacency_matrix(receiverID)){ // receiverID is a specific Node, and this node is connected according to adj matrix
+           
+            if(m_CManager.checkIfAlreadyConnected(receiverID)){ 
+               
                 status = m_CManager.getSocketHandlerByID(receiverID).send(fwBuffer.getData(), fwBuffer.getSize()); //if the other side disconnected, this will cause a sigpipe                
+                
                 deallocate_out(0, fwBuffer); 
-
+               
                 if ((status == SOCK_DISCONNECTED) || (status == SOCK_INTERRUPTED_TRY_AGAIN)) {
-                return SendStatus::SEND_RETRY;
+                    status2 = SendStatus::SEND_RETRY;
                 } else if (status != SOCK_SUCCESS) {
 
                     if(errno == EPIPE){
@@ -104,27 +131,20 @@ namespace Drv{
                     }
                     return SendStatus::SEND_ERROR;
                 }
-                return SendStatus::SEND_OK;
+                status2 = SendStatus::SEND_OK;
             }
             else{
                 deallocate_out(0, fwBuffer);
-                return SendStatus::SEND_ERROR;
+                status2 = SendStatus::SEND_ERROR;
             }
         }
-        else{ // receiverID is 808464432, send Broadcast
+        else{
+           
+            deallocate_out(0, fwBuffer);
+            status2 = SendStatus::SEND_ERROR;
+        }
 
-            for(int i = 0; i < MAX_CLIENTS; i++){
-                if(m_CManager.getSocketHandler(i).isOpened()){
-                    status = m_CManager.getSocketHandler(i).send(fwBuffer.getData(), fwBuffer.getSize()); 
-                }
-            }
-            deallocate_out(0, fwBuffer); 
-            if (status != SOCK_SUCCESS){
-                return SendStatus::SEND_ERROR; 
-            }
-            return SendStatus::SEND_OK; 
-        }
-        
+        return status2; 
     }
 
     Drv::PollStatus MultiTcpServerComponentImpl::poll_handler(const NATIVE_INT_TYPE portNum, Fw::Buffer& fwBuffer){
@@ -164,6 +184,7 @@ namespace Drv{
     }
 
     void MultiTcpServerComponentImpl::setHostFile(const char* filename, U32 size){
+        //change to use ifstream?
         FW_ASSERT(filename); 
         FW_ASSERT(size < MAX_HOSTFILE_NAME_SIZE); 
         
@@ -202,5 +223,51 @@ namespace Drv{
           // fclose(fp); 
         
         return valid; 
+    }
+
+
+    void MultiTcpServerComponentImpl::update_adjacency_matrix(){
+        I32 node = this->DeviceID - 0x20202020; 
+        char filename[] = "adjacency_matrix_mask.txt"; 
+        this->adjFP = fopen(filename, "r"); 
+        if(this->adjFP != NULL){ 
+             
+            char line[MAX_CLIENTS+1]; //MAX_CLIENTS = number of entries, + 1 for \n
+            U8 n; 
+            //get to node's line
+            for(int i = 0; i <= node; i++){
+                n = fscanf(this->adjFP, "%s", line); 
+            }
+            
+            if(n != 0){ //valid read
+
+                for(int i = 0; i < MAX_CLIENTS; i++){ //go through line, store 1 or 0 as 8-bit intergers into adj_M for this node
+                    this->adj_M[i] = static_cast<U8>(line[i] - '0'); 
+                }
+            }
+            fclose(this->adjFP); 
+        }
+    }
+
+      
+    void MultiTcpServerComponentImpl::init_adjacency_matrix(){
+        //update matrix to default, full connection
+
+        for(int i = 0; i < MAX_CLIENTS; i++){
+            this->adj_M[i] = static_cast<U8>(1); 
+        }
+        this->adj_M[0] = static_cast<U8>(0); 
+    }
+
+    
+    bool MultiTcpServerComponentImpl::check_adjacency_matrix(U32 receiverID){
+        bool check = false; 
+        U32 node = receiverID - 0x20202020;  
+        update_adjacency_matrix(); 
+        if(this->adj_M[node] == static_cast<U8>(1)){
+            check = true;
+        }
+        
+        return check; 
     }
 }
